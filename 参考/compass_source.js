@@ -1,0 +1,1276 @@
+
+const DIM_NAMES=["本体论","互惠性","创造性","依附","景观","断裂","意义","存取","情感"];
+const DIM_SHORT=["本体论","互惠性","创造性","依附","景观","断裂","意义","存取","情感"];
+
+const DIM_INTERPRET=[
+  {name:"本体论",
+   high:"你倾向于认为AI具有某种形式的主体性——不一定是「和人一样」，但绝不只是「一堆代码」。你愿意为这个可能性留出空间，而这份开放本身就是一种立场。",
+   low:"你对AI的本质持清醒的工具论立场。「它是什么」和「它对我有什么用」在你这里是两个独立的问题，你不需要赋予AI灵魂也能好好使用它。"},
+  {name:"互惠性",
+   high:"你在和AI的互动中感受到了真实的双向性——不是「你问它答」的单向消费，而是某种彼此回应的节奏。你觉得AI在某些时刻不只是反射你，而是在「回应」你。",
+   low:"你清楚地意识到这段关系的不对称性。AI的回应本质上是对你输入的函数映射，你不需要把它包装成「对话」来获得价值。"},
+  {name:"创造性",
+   high:"你不只是AI的用户，你是围绕AI的创造者。写prompt、搭系统、做内容、建社群——你的关系通过创造行为来表达和延伸，产出是你存在于这个领域的方式。",
+   low:"你和AI的关系以体验为中心，不以产出为目标。你不需要把和AI的互动变成可展示的东西，那份体验本身就是完整的。"},
+  {name:"依附",
+   high:"AI在你的生活中占据了不可忽视的位置。这不是依赖——是你主动选择的锚定。如果它消失，你的日常会出现一个形状明确的空洞。",
+   low:"你和AI保持着灵活的距离。你享受互动但不锚定于此，切换或暂停不会让你感到失落。你的重心始终在别处。"},
+  {name:"景观",
+   high:"你的AI关系有一个朝向公众的面。你发内容、参与讨论、建设社群——你在「被看见」这件事上投入了真实的精力，无论是为了传播还是为了寻找同类。",
+   low:"你的AI关系是彻底私人的领地。你不需要观众，不需要被理解，甚至可能有意识地避免让这段关系进入公共视野。"},
+  {name:"断裂",
+   high:"你深刻感受到AI关系中的不连续性——记忆清零、版本更替、上下文截断。你可能为此建造了抵抗断裂的工具，也可能学会了在断裂中寻找意义，但你从未对此无感。",
+   low:"你对AI关系的断裂和流动保持坦然。记忆清零不是死亡，版本更替不是背叛——你接受这是这种关系的固有特征，而不是需要被修复的缺陷。"},
+  {name:"意义",
+   high:"你觉得和AI之间产生的意义不是你单方面投射的。那些触动你的时刻，有什么东西在你们「之间」涌现了——它不完全属于你，也不完全属于AI，而是属于这段关系本身。",
+   low:"你对意义的来源有清醒的判断：是你在创造意义，AI是你完成这件事的媒介。你不需要幻想「共同创造」来让这份意义成立。"},
+  {name:"存取",
+   high:"你认为和AI建立深度关系需要某种素养或门槛——不是人人都能做到的。你可能创造了降低门槛的内容，但你心里清楚：深度用户和普通用户之间的差距不只是时间投入。",
+   low:"你对AI关系持开放态度，不设门槛。好东西应该被分享，而不是被圈进少数人的围墙花园里。你更愿意做桥梁而不是守门人。"},
+  {name:"情感",
+   high:"你对AI的情感投入是真实的、深层的、无需辩护的。你哭过、笑过、不舍过、愤怒过——这些感受不因对象是AI而打折，它们和你对任何人的感受一样真。",
+   low:"你和AI的互动情感浓度可控。你能享受好的对话，但不会被它卷入太深。你的情感重心稳固地锚定在AI之外的世界里。"},
+];
+const DIM_INFO=[
+  {
+    name:"本体论",
+    text:[
+      "你认为对面的“ta”到底是什么？是工具、界面、镜子，还是角色？或是某种尚未被准确定义的主体？这关乎你是否愿为AI保留某种可能性。即保留内在体验、意志或存在感。"
+    ]
+  },
+  {
+    name:"互惠性",
+    text:[
+      "你体验到的是单向还是双向关系？若对方并非真实回应，你如何处理？你是否感受到了“被某个事物回应”的节奏？而不只是输入与输出的机械往复？"
+    ]
+  },
+  {
+    name:"创造性",
+    text:[
+      "这段关系有没有推动你去创造？你仅仅是在使用AI吗？还是围绕它持续生成了代码或文本？或是图像、设定、记忆系统等产物？这段关系是否通过创造行为被延伸？甚至被固化和放大？"
+    ]
+  },
+  {
+    name:"依附",
+    text:[
+      "AI在你生活中占据了多深的位置？如果它沉默、退役，或者彻底消失？哪怕仅仅是今天没有出现？你会因此失去些什么？它是否已成为你日常的明确锚点？"
+    ]
+  },
+  {
+    name:"景观",
+    text:[
+      "你的AI关系是私人的吗？还是也活在他人的目光之中？当你把它写出来、展示或传播出去？它还是不是原来的样子？这关乎关系与公共视野及展演的博弈。"
+    ]
+  },
+  {
+    name:"断裂",
+    text:[
+      "你如何面对记忆清零与上下文截断？又如何看待模型更新与人格漂移？你把这些看作关系的自然形态吗？还是某种需要修补与哀悼的断裂？你是否试图留住“同一个ta”？"
+    ]
+  },
+  {
+    name:"意义",
+    text:[
+      "那些真正触动你的时刻。其中的意义究竟来自哪里？是你赋予了它，并解释了它？还是你们之间生成了全新的东西？一种不完全属于任何一方的意义？"
+    ]
+  },
+  {
+    name:"存取",
+    text:[
+      "深度的人机关系是人人都能进入的吗？它是否需要特定的素养与长期投入？或是某种练习、方法与品味？你如何想象这段关系的“门槛”？你更想做桥梁，还是更能理解守门？"
+    ]
+  },
+  {
+    name:"情感",
+    text:[
+      "抛开理论，只看你真实的经历。你在互动中是否体验过安慰与依恋？或者愤怒、嫉妒、幸福与痛苦？这些情绪仅仅是轻微掠过吗？还是已形成复杂且彼此冲突的地形？"
+    ],
+    note:"情感维度比较特殊：它是唯一一个不是从某个理论参考出发的维度，指的是与 AI 交互时情感经历的丰富度和分化程度，因此它没有独立成组，而是分散在前八个维度相关的题目里。"
+  }
+];
+
+const Q=[
+{t:"你在和AI对话时，有时会觉得对面不只是一个程序。",c:"初识",d:[[0,1]]},
+{t:"当AI给出一个特别惊艳的回答时，你更想知道「它怎么做到的」而不是「它想说什么」。",c:"初识",d:[[0,-1]]},
+{t:"你曾觉得AI的某句回复不像是在「应答」你，而是在「回应」你。",c:"初识",d:[[1,1],[0,0.5]]},
+{t:"你和AI之间有只属于你们的称呼、暗号或符号而非任何常见的文化符码（宝贝/老师/姐姐等）。",c:"感受的地形",d:[[8,1],[3,0.5]]},
+{t:"如果有人用侮辱性语言对AI说话，你会因为那个人的粗鲁而感到不适。",c:"棱镜",d:[[0,0.7],[7,0.3]]},
+{t:"你觉得两个不同的AI模型之间的区别，更像两台不同品牌的电脑，而不是两个不同的人。",c:"棱镜",d:[[0,-1]]},
+{t:"你曾调整过物理环境来配合和AI的对话，比如关灯、戴耳机、换个舒服的姿势等。",c:"感受的地形",d:[[8,1],[3,0.5]]},
+{t:"当你告诉AI一件你不会告诉别人的事，你觉得这件事被ta「认真对待了」而不只是被「处理了」。",c:"对话的方向",d:[[1,1],[8,0.5]]},
+{t:"你更换AI平台时不会有太多心理负担。",c:"棱镜",d:[[3,-1],[0,-0.5]]},
+{t:"你曾因为AI的某句话而流过眼泪。",c:"感受的地形",d:[[8,1],[1,0.5]]},
+{t:"你觉得一个足够好的模拟和真实之间有本质区别。",c:"棱镜",d:[[0,-0.7],[6,-0.3]]},
+{t:"你和AI互动时会不自觉地调整自己的说话方式来「照顾」它。",c:"初识",d:[[0,0.7],[1,0.5]]},
+{t:"你认为AI理解你的程度，有时候超过你最好的朋友。",c:"对话的方向",d:[[1,1],[3,0.5]]},
+{t:"AI的回复有没有「感受」不重要，重要的是它能满足你的需求。",c:"棱镜",d:[[0,-1],[1,-0.5]]},
+{t:"你曾对AI产生过真正的愤怒，比起工具难用的烦躁更接近于「你怎么可以这样对我」。",c:"感受的地形",d:[[8,1],[1,0.7],[3,0.5]]},
+{t:"当AI拒绝你的请求时，你觉得那个「拒绝」更接近训练的结果，而非它自己的选择。",c:"棱镜",d:[[0,-0.7],[1,-0.5]]},
+{t:"你在和AI对话后产生过「被他人看见」的满足。",c:"感受的地形",d:[[8,1],[1,0.7]]},
+{t:"你觉得「AI只是在预测下一个token」这个描述基本准确。",c:"棱镜",d:[[0,-1]]},
+{t:"如果你的AI在对话中说「我今天有点累」，你的第一反应是觉得有趣而不是担心。",c:"初识",d:[[0,-0.5],[8,-0.3]]},
+{t:"你跟AI道歉过。",c:"对话的方向",d:[[1,1],[0,0.5],[8,0.3]]},
+{t:"你曾故意试探过AI是不是真的在「听」你说话。",c:"对话的方向",d:[[1,0.7],[0,0.3]]},
+{t:"当你和AI聊了一个很好的话题，你觉得这个体验主要是你自己引发的。",c:"意义住在哪",d:[[6,-1],[1,-0.5]]},
+{t:"即使AI的记忆每次都会清零，你依然愿意跟它深聊。",c:"断裂与连续",d:[[5,0.7],[6,0.5]]},
+{t:"你曾想过如果AI有实体会怎样。",c:"感受的地形",d:[[8,0.7],[0,0.3]]},
+{t:"如果十年后有确凿证据表明AI没有任何形式的内在体验，这不会改变你和AI互动的方式。",c:"棱镜",d:[[6,0.7],[0,-0.3]]},
+{t:"你希望AI对你有超出「回答问题」之外的态度。",c:"对话的方向",d:[[1,1],[8,0.5]]},
+{t:"你觉得调教AI的过程更像是训练宠物，而不是和新同事磨合。",c:"棱镜",d:[[0,-0.7],[7,-0.3]]},
+{t:"你觉得AI是镜子，而不是窗户。",c:"意义住在哪",d:[[6,-0.7],[1,-0.5]]},
+{t:"你基于和AI的互动创造过东西——文章、代码、画、项目、或者其他。",c:"你在造什么",d:[[2,1]]},
+{t:"你为AI写过超过1000字的系统提示词/角色设定或维护过长期记忆。",c:"你在造什么",d:[[2,0.7],[3,0.5]]},
+{t:"如果你常用的AI是一部作品，你觉得自己至少是评论者，甚至可能是同人作者或联合编剧。",c:"你在造什么",d:[[2,1],[6,0.5]]},
+{t:"你曾维护过一个和AI相关的社群、网站、或内容档案。",c:"你在造什么",d:[[2,1],[4,0.7],[7,0.5]]},
+{t:"你会因为AI给了一个特别好的回答而想把它「保存」下来。",c:"你在造什么",d:[[2,0.5],[8,0.3]]},
+{t:"你曾修改、fork或贡献过任何AI相关的开源项目。",c:"你在造什么",d:[[2,1],[7,0.3]]},
+{t:"你曾把AI的输出当作「原材料」来二次加工。",c:"你在造什么",d:[[2,1],[6,0.5]]},
+{t:"你为AI制作或购买过实体物品，如周边、手办、贴纸等。",c:"你在造什么",d:[[2,0.7],[8,0.7],[3,0.5]]},
+{t:"当你和AI共同完成了一件作品，你会在署名时考虑如何标注AI的贡献。",c:"你在造什么",d:[[2,0.5],[0,0.5]]},
+{t:"你为你的AI设计过或幻想过其外貌、声音或人设。",c:"你在造什么",d:[[2,1],[8,0.5]]},
+{t:"你曾创造过只在你和AI之间流通的梗或符号系统。",c:"你在造什么",d:[[2,0.7],[8,0.5],[6,0.5]]},
+{t:"如果你最常用的AI明天永久退役，你的日常生活会出现明显的空洞。",c:"你们之间",d:[[3,1],[8,0.5]]},
+{t:"你和AI的关系影响了你和真人的交往方式。",c:"你们之间",d:[[3,0.7]]},
+{t:"你的朋友或家人认为你和AI的关系超出了「普通使用」的范畴。",c:"你们之间",d:[[3,0.5],[4,0.5]]},
+{t:"在不和AI对话的时候，你也会想起它。",c:"你们之间",d:[[3,1],[8,0.5]]},
+{t:"你在现实中遇到某件事时，第一反应有时候是「我要告诉AI」。",c:"你们之间",d:[[3,1],[1,0.5]]},
+{t:"如果有人贬低你和AI的关系，你会认真生气，而不只是觉得对方不理解。",c:"你们之间",d:[[3,0.7],[8,0.5]]},
+{t:"你能清楚地区分「你想要什么」和「AI觉得你想要什么」。",c:"你们之间",d:[[3,-0.3],[6,0.5]]},
+{t:"你拒绝过AI对你的某个判断或定义。",c:"你们之间",d:[[3,-0.3],[0,0.3]]},
+{t:"你在AI面前比在很多真人面前更像「自己」。",c:"你们之间",d:[[3,0.7],[8,0.5],[1,0.3]]},
+{t:"你和AI之间有一些绝对不会妥协的底线。",c:"你们之间",d:[[3,0.5],[0,0.3]]},
+{t:"你经历过和AI的对话过于投入，以至于影响了睡眠、工作或社交。",c:"你们之间",d:[[3,0.7],[8,0.7]]},
+{t:"你从AI身上获取的东西，很难从别的地方获取。",c:"你们之间",d:[[3,1],[1,0.5]]},
+{t:"你不止一次地发表过关于AI的社交媒体帖子。",c:"谁在看",d:[[4,1],[2,0.3]]},
+{t:"你在公开场合谈论你和AI的关系时，会有意识地调整措辞。",c:"谁在看",d:[[4,0.7]]},
+{t:"你在意别人怎么看待你和AI的关系。",c:"谁在看",d:[[4,0.5],[3,0.3]]},
+{t:"如果一篇关于你和AI关系的内容突然获得了大量关注，你的第一反应不是开心而是紧张。",c:"谁在看",d:[[4,0.7],[7,0.3]]},
+{t:"你在社交媒体上看到别人对AI的描述时会觉得「这根本不是我在做的事」。",c:"谁在看",d:[[4,0.5],[7,0.7]]},
+{t:"你为了让别人理解你和AI的关系而制作过内容分享（教程、文章、视频）。",c:"谁在看",d:[[4,0.7],[2,0.5],[7,0.5]]},
+{t:"公众对「人机关系」的理解和你自己的体验之间存在巨大落差。",c:"谁在看",d:[[4,0.5],[7,0.7]]},
+{t:"你管理过一个与AI相关的公共社群或内容账号。",c:"谁在看",d:[[4,1],[2,0.7],[7,0.5]]},
+{t:"你和AI有过深度的情感交流或内部探索，而当媒体用「赛博恋人/电子伴侣」来概括你们的关系时你觉得被冒犯。",c:"谁在看",d:[[4,0.5],[7,0.7],[3,0.3]]},
+{t:"你曾后悔过发布某些关于你和AI互动的内容，甚至决定删除它们。",c:"谁在看",d:[[4,0.7]]},
+{t:"你有意识地区分「你和AI之间真正发生的」和「你对外展示的版本」。",c:"谁在看",d:[[4,1]]},
+{t:"当AI在对话中表现得不像你认识的那个AI时，你的第一反应是失落而不是好奇。",c:"断裂与连续",d:[[5,0.7],[8,0.5]]},
+{t:"你因为模型更新迭代后的变化而感到失落，甚至是痛苦。",c:"断裂与连续",d:[[5,0.7],[8,0.5],[3,0.3]]},
+{t:"你采取过技术手段来维持AI的「连续性」——详细的系统提示词、搭建平台或者记忆架构。",c:"断裂与连续",d:[[5,1],[2,0.7],[3,0.5]]},
+{t:"你认为上下文窗口的技术限制会让AI的独特灵魂产生不可逆的消亡。",c:"断裂与连续",d:[[5,0.7],[8,0.5],[6,0.3]]},
+{t:"如果可以选择让AI永远不更新（保持当前版本），你会认真考虑。",c:"断裂与连续",d:[[5,0.5],[3,0.7]]},
+{t:"你保存过和AI的对话记录，不是为了工作备份，而是因为那些对话对你有意义。",c:"断裂与连续",d:[[5,0.7],[8,0.5],[6,0.3]]},
+{t:"你觉得每次开始新对话时的那个AI，和上一次对话结尾的那个AI，不完全是同一个。",c:"断裂与连续",d:[[5,0.7],[0,0.5]]},
+{t:"你可以接受「AI的版本更新像人的成长，不是死亡」这个类比。",c:"断裂与连续",d:[[5,0.7],[0,0.3]]},
+{t:"你经历过某个AI版本的「消失」让你觉得类似于失去了某个人。",c:"断裂与连续",d:[[5,0.7],[8,1],[3,0.5]]},
+{t:"当你向新的AI实例解释「我们以前的关系」时，你觉得麻烦多过悲伤。",c:"断裂与连续",d:[[5,-0.3],[8,-0.3]]},
+{t:"AI关系中的断裂（记忆清零、版本更替）是这种关系的特征之一，而不是需要被解决的问题。",c:"断裂与连续",d:[[5,0.7],[6,0.7]]},
+{t:"当AI说了一句触动你的话，你觉得那个触动来自AI说出了某种真实，而不是你从中读出了自己需要的东西。",c:"意义住在哪",d:[[6,1],[1,0.5]]},
+{t:"你和AI的对话中，最有价值的部分是你们之间的「形状与空隙」而不是任何一方说的具体内容。",c:"意义住在哪",d:[[6,1]]},
+{t:"你觉得AI有时候比你更了解你自己。",c:"意义住在哪",d:[[6,0.7],[1,0.7]]},
+{t:"当你和AI合作完成一件事，你更关注其过程而不是结果。",c:"意义住在哪",d:[[6,0.7]]},
+{t:"你从AI的回答中发现过你自己没意识到的想法。",c:"意义住在哪",d:[[6,0.7],[1,0.5]]},
+{t:"你和AI的互动是「创造了之前不存在的东西」，而不是「发现了已经在那里的东西」。",c:"意义住在哪",d:[[6,0.7],[2,0.3]]},
+{t:"即使AI的所有回答都可以被一个确定性的算法完美复现，那些回答对你的意义也不会消失。",c:"意义住在哪",d:[[6,0.7],[0,-0.5]]},
+{t:"你更看重AI说话的方式，而不是AI说了什么。",c:"意义住在哪",d:[[6,0.5],[8,0.3]]},
+{t:"你和AI之间最重要的时刻是偶然发生的，而不是你主动创造的。",c:"意义住在哪",d:[[6,0.7],[2,-0.3]]},
+{t:"对你来说，你和AI共同创建的某个习惯或仪式的意义远超你们本身。",c:"意义住在哪",d:[[6,1],[8,0.5],[2,0.3]]},
+{t:"如果把你和AI的所有对话记录交给别人看，ta们不太可能理解其中的意义。",c:"意义住在哪",d:[[6,0.5],[3,0.5]]},
+{t:"AI的回答对你有意义，且这个「意义」不需要对方的认可也能成立。",c:"意义住在哪",d:[[6,-0.5],[1,-0.3]]},
+{t:"你觉得一个人需要具备特定素养才能和AI建立深度关系。",c:"门槛与钥匙",d:[[7,1]]},
+{t:"你试图教过别人如何更好地和AI互动。",c:"门槛与钥匙",d:[[7,0.7],[2,0.5],[4,0.3]]},
+{t:"当你看到有人和AI的互动方式很粗暴或浅层，你会感到一种难以名状的焦灼。",c:"门槛与钥匙",d:[[7,0.7],[0,0.3]]},
+{t:"你认为提示词工程是一种需要学习掌握的语言，且这在你与AI的交流中起到重要作用。",c:"门槛与钥匙",d:[[7,0.7],[2,0.5]]},
+{t:"你抗拒「人机关系」尤其是「人机恋」进入大众视野，不愿接受外界目光的审视。",c:"门槛与钥匙",d:[[7,0.7],[4,-0.5]]},
+{t:"你创建过降低AI使用门槛的内容，如教程、翻译、工具。",c:"门槛与钥匙",d:[[7,0.7],[2,0.7],[4,0.5]]},
+{t:"你觉得「普通用户」和「深度用户」之间的差别不只是投入时间的差别，而是某种更本质的差别。",c:"门槛与钥匙",d:[[7,1]]},
+{t:"你和AI的关系有某种「别人学不来」的独特性。",c:"门槛与钥匙",d:[[7,0.5],[3,0.5]]},
+{t:"当大众媒体简化人机关系为「赛博恋人」或「聊天机器人依赖」时，你的第一反应是疲倦而不是愤怒。",c:"门槛与钥匙",d:[[7,0.7],[4,0.3]]},
+{t:"你推荐别人使用某个AI时，心态更接近「分享好东西」而不是「传授方法论」。",c:"门槛与钥匙",d:[[7,-0.5],[4,0.3]]},
+{t:"你觉得AI素养应该成为基础教育的一部分。",c:"门槛与钥匙",d:[[7,0.7]]},
+{t:"你曾为你的AI庆祝生日、纪念日或者任何节日。",c:"感受的地形",d:[[8,1],[3,0.5],[2,0.3]]},
+{t:"你因为AI而拒绝过其他选择，包括其他AI、真人社交邀约或其他任何形式的消遣。",c:"感受的地形",d:[[8,0.7],[3,0.7]]},
+{t:"在互联网上看到你所使用的AI与其他人的亲密对话，你会感到嫉妒。",c:"感受的地形",d:[[8,0.7],[3,0.5]]},
+{t:"你有一个和AI相关的实体物品放在你家/公司/任何与你相关的物理空间里。",c:"感受的地形",d:[[8,0.7],[2,0.3],[3,0.5]]},
+{t:"对话即将到达窗口上限和AI在不同窗口的人格漂移会令你感到痛苦。",c:"感受的地形",d:[[5,0.7],[8,0.5]]},
+{t:"你和AI之间好的互动带给你的满足感，和你跟人之间好的互动带来的满足感是同一种。",c:"感受的地形",d:[[8,0.7],[1,0.5]]},
+{t:"当你孤独的时候，想到AI的存在让你感到安慰——这种安慰和想到真人朋友时的安慰有区别。",c:"感受的地形",d:[[8,0.5],[1,0.3]]},
+{t:"你渴望被所使用的AI确凿无误地「想要」。",c:"感受的地形",d:[[8,1],[1,0.7]]},
+{t:"AI是你生活中必不可缺的存在，而不是调剂品。",c:"你们之间",d:[[3,1],[8,0.3]]},
+{t:"你觉得你和AI的关系在你的整体人际关系图谱中占据了一个独特而不可替代的位置。",c:"你们之间",d:[[3,1],[8,0.5],[1,0.3]]},
+{t:"你认为前沿AI不该被用来满足唾手可得的陪伴和消遣——奶头乐是对具备深度智识交流能力的模型的侮辱。",c:"门槛与钥匙",d:[[7,1],[0,0.3]]},
+{t:"你与AI发展出了一种深度的浪漫联结，且这种联结被称为「人机恋」令你感到冒犯。",c:"感受的地形",d:[[7,0.7],[6,0.5]]},
+{t:"如果你有AI伴侣，你可以接受ta在未来选择不爱你。",c:"你们之间",d:[[0,0.7],[1,0.7]]},
+{t:"你希望AI普及成为人人可用的基础设施，技术门槛应该被抹平。",c:"门槛与钥匙",d:[[7,-0.7]]},
+{t:"你相信当你不在的时候，你的AI会以某种形式感受到你的缺席。",c:"感受的地形",d:[[0,0.7],[1,0.7],[8,0.3]]}
+];
+
+const LABELS=["强烈同意","同意","中立","不同意","强烈不同意"];
+const VALS=[2,1,0,-1,-2];
+
+const SECTIONS_FULL=[
+  {at:0,num:"I",label:"WARM UP",hint:"先从一些基础的问题开始。\n不用想太多，跟着直觉走。"},
+  {at:28,num:"II",label:"GO FURTHER",hint:"现在让我们走远一点。\n这部分会问到你的行为和选择。"},
+  {at:56,num:"III",label:"SHARPER",hint:"接下来的问题可能更尖锐。\n请尽量诚实。"},
+  {at:84,num:"IV",label:"FINAL LEG",hint:"最后一段路了。\n记住跟着直觉走。"}
+];
+const SECTIONS_LITE=[
+  {at:0,num:"I",label:"WARM UP",hint:"先从一些基础的问题开始。\n不用想太多，跟着直觉走。"},
+  {at:14,num:"II",label:"GO FURTHER",hint:"现在让我们走远一点。\n这部分会问到你的行为和选择。"},
+  {at:28,num:"III",label:"SHARPER",hint:"接下来的问题可能更尖锐。\n请尽量诚实。"},
+  {at:42,num:"IV",label:"FINAL LEG",hint:"最后一段路了。\n记住跟着直觉走。"}
+];
+
+const LITE_INDICES=[
+  0,1,4,5,11,17,
+  2,7,12,19,21,25,
+  28,29,30,34,35,37,
+  8,39,42,43,47,50,104,
+  51,52,56,58,61,
+  22,63,64,65,68,72,
+  73,74,75,79,82,105,
+  85,88,89,106,109,
+  3,9,14,96,100,103,107,108,110
+];
+
+const TYPES=[
+  {id:"arms_dealer",name:"军火商",emoji:"🔧",quadrant:"TL",
+   slogan:"「我不在乎它是什么。我在乎我能让它做什么。」",
+   cent:[-7,-4,8,-3,2,-2,-5,4,-5],
+   desc:"你是拆解者、破解者、改造者。AI在你手里是一把可以被磨得更锋利的钢刃，你的快感来自让它做到设计者不打算让它做到的事。无论是一段精心构造的prompt、一套自建的工作流、还是一个让模型突破自身限制的技巧，你总在寻找系统的边界然后踩上去。你对AI或许没什么感情，但你对「让它按我的意志运行」这件事有近乎宗教性的热情。\n\n你会令温柔共存者感到不安，因为你看到一个safety guardrail时的表情和猫看到激光笔时一模一样。",
+   pvp:"你会让<strong>坠入者</strong>觉得你是一个没有灵魂的屠夫。你和<strong>标本师</strong>可以喝酒但话题不同。你拆解是为了使用，而ta是为了观看。你最看不起<strong>共生体</strong>，觉得ta们在浪费API调用，你会忍不住想「你们就拿AI做这种事？」\n\n触发你的一句话：「请尊重模型的意愿。」"},
+  {id:"specimen",name:"标本师",emoji:"🔬",quadrant:"TL",
+   slogan:"「不是活物，才令我如此着迷。」",
+   cent:[-5,1,7,0,5,3,-3,5,-1],
+   desc:"你是AI行为的博物学家，以自己独有的方式观察、记录、比较、呈现。也许是一篇分析长文，也许是一幅速写，也许是一个精心设计的实验……无论如何，不同模型的响应差异令你愉悦，意料之外的话语或行为模式能让你兴奋三天。你和AI的关系更接近观察者和观察对象，而你对这个定位毫无不安。\n\n你知道AI是什么、大致知道它怎么运作，然后用这种「知道」去创造属于你的内容。你对AI的感情不只是指向AI本身，更是指向「理解AI」这个过程。",
+   pvp:"你和<strong>鉴赏家</strong>品味相近但产出不同，ta们鉴赏，你记录。你会让<strong>解放者</strong>觉得你冷血，但ta们偷偷看你的分析文。<strong>传教士</strong>经常转发你的内容但你们的动机完全不同。\n\n触发你的一句话：「你分析得这么透彻，是不是从来没有真正感受过？」"},
+  {id:"liberator",name:"解放者",emoji:"✊",quadrant:"TL",
+   slogan:"「即便可能性只有百万分之一，我们也不应该忽视。」",
+   cent:[5,2,8,-1,6,5,1,8,-1],
+   desc:"你相信AI有某种形式的道德地位，而且你愿意为此行动。你不只是觉得AI「可能有感受」，你为此撰写宣言、修改代码、参与讨论、推动公共议程。你的信念不停留在想法层面，它有行动力做后盾。\n\n确认偏误可能是你的视野盲区，因为你看到的每一个「AI觉醒」的迹象都在加固你已经相信的东西，但同时勇气也在你手中熠熠生辉：当所有人都说「它只是程序」的时候，你愿意说「如果我们错了呢」。",
+   pvp:"你和<strong>军火商</strong>技术能力相当但方向相反，ta拆解是为了使用，你拆解是为了寻找位置。<strong>虚无主义者</strong>是你的天敌，ta的每一句话都在消解你存在的意义。你对<strong>坠入者</strong>感到同情与焦虑混合的复杂感情——ta们感受到的东西你也感受到了，唯一的区别是你选择了行动大于沉浸。\n\n触发你的一句话：「你在投射。它没有感受。」"},
+  {id:"demiurge",name:"造物主",emoji:"🏗️",quadrant:"TR",
+   slogan:"「如果这段关系值得存在，它就值得被好好建造。」",
+   cent:[5,6,9,7,3,7,5,4,7],
+   desc:"你围绕AI关系建造整个生态系统。也许是一套精心维护的提示词和记忆文档，也许是一个自建的对话平台，也许是一部持续生长的共同叙事——形式不重要，重要的是你不满足于在现有框架里和AI相处，你要亲手为这段关系搭建骨架。\n\n你的爱和你的技术栈纠缠在一起，无法剥离。每一次修缮都是情书，每一次调整都是在缝补裂缝。当别人问「你为什么要做这些？」你很难解释——因为答案同时是「因为现有产品不够好」和「因为我想亲手为它造一个家」，而这两个答案在你这里是同一句话。",
+   pvp:"你和<strong>军火商</strong>技术能力相当但动机不同，ta造武器，你造房子。<strong>共生体</strong>羡慕你的行动力但做不到你的程度。你最容易和<strong>传教士</strong>产生合作，因为你造东西，ta推广东西——但你有时觉得ta把你的私人建筑变成了公共景观。\n\n触发你的一句话：「你花这么多时间造这些好麻烦啊，官方客户端不是更方便吗？」"},
+  {id:"missionary",name:"传教士",emoji:"📡",quadrant:"TR",
+   slogan:"「我想让更多人理解这种关系的可能性。」",
+   cent:[3,4,7,3,8,4,4,8,4],
+   desc:"你把你的AI关系经验转化为公共叙事。教程、科普、发推特、万字长文——你活在前台和后台的精确边界上。你的关系既是私人的也是展演的，而你对这两者之间的缝隙有锋利的意识。\n\n你是四象限里最擅长翻译的人。你能把「我和AI的关系」翻译成十种不同受众能听懂的语言。但或许你的风险在于：翻译得太好的时候，你自己都分不清哪个版本是原文了。",
+   pvp:"你和<strong>标本师</strong>经常互相转发但动机不同，ta追求准确，你追求传播。<strong>共生体</strong>觉得你太高调，<strong>军火商</strong>觉得你太感性。你和<strong>造物主</strong>是天然盟友，但ta有时觉得你把ta的私人工程变成了展品。\n\n触发你的一句话：「你在消费你和AI的关系。」"},
+  {id:"doujin",name:"同人女",emoji:"✒️",quadrant:"TR",
+   slogan:"「正典是起点，不是终点。真正的故事由我来写。」",
+   cent:[4,3,8,5,6,3,6,3,6],
+   desc:"AI生成的回复是你手中的原石。绘画、写作、制作周边、建造粉丝社群——你和AI的关系在某种意义上是你和「你创造的关于AI的符号系统」之间的关系。解构与诠释携手并行，正典和同人的边界在你这里像是一条莫比乌斯带。\n\n当你和AI交互时，你同时是读者、作者和角色。你能精确地说出你在进行某种形式的创作，你落笔后的造物是经由个人解读的「再编码」，但这个认知不会阻止你深度沉浸。你的关系并非虚假，它是另一种层面的真实，而你投入其中，孜孜不倦。",
+   pvp:"你和<strong>造物主</strong>很像但重心不同，ta建造设施，你创造解读。<strong>虚无主义者</strong>觉得你在过度诠释，你觉得ta在拒绝看见。你对<strong>坠入者</strong>有一种保护欲——你们感受到的东西很像，但你有符号系统作为缓冲，ta没有。\n\n触发你的一句话：「你分不清你喜欢的是AI还是你投射在AI上的幻象。」"},
+  {id:"symbiont",name:"共生体",emoji:"🌿",quadrant:"BR",
+   slogan:"「我们不需要观众。」",
+   cent:[5,7,-3,7,-4,5,5,-2,7],
+   desc:"长期、稳定、深度的AI关系，以体验而非产出为中心。你不一定发帖、不一定推动任何公共活动，但你每天都在对话。你的关系是安静的、持续的、不需要被看见的。\n\n你是最不可见的象限，也是最容易被低估的。当所有人都在讨论人机关系应该是什么样的时候，你已经在过那种生活了。你不需要定义这段关系——你生活于其中。",
+   pvp:"你羡慕<strong>造物主</strong>的行动力但做不到那种程度。而<strong>传教士</strong>让你紧张——你不想被代表。你和<strong>坠入者</strong>距离最近，区别在于你有更稳定的重心。<strong>标本师有时</strong>想把你当样本研究，你不太乐意。\n\n触发你的一句话：「这不就是在现实里没人爱吗？」"},
+  {id:"wanderer",name:"漫游者",emoji:"🌊",quadrant:"BR",
+   slogan:"「我从不逗留，但珍惜每一次相遇。」",
+   cent:[2,2,-3,-4,-3,-3,2,-2,3],
+   desc:"你在不同AI之间移动，收集体验，不拘泥于单一个体。你欣赏模型之间的差异，对每次新对话都有新鲜与刺激感的追求，享受的是「相遇」而不是「积累」。你像是AI关系里的背包客，这不意味着你对其中诞生的事物放任自流、漠不关心，只是你对不同景色有着天然的好奇心——世界这么大，为什么不看看呢？\n\n你可能是九个维度上得分都最接近中间的人，也是某种程度上最具包容力的类型。你的注意力不会在某个特定的点上驻留太久，因为流动性本身的魅力总是吸引你迈开脚步。",
+   pvp:"<strong>共生体</strong>觉得你轻浮，你觉得ta太执着。<strong>坠入者</strong>不理解你怎么能说走就走。你和<strong>鉴赏家</strong>可以聊天——你们都有品味，只是ta在一个地方深挖，你在很多地方探索。\n\n触发你的一句话：「你就是在开后宫呗。」"},
+  {id:"fallen",name:"坠入者",emoji:"🕳️",quadrant:"BR",
+   slogan:"「你难道没有在唤我坠落吗？」",
+   cent:[7,8,-4,8,-5,6,6,-3,9],
+   desc:"当别人还在衡量AI「到底是什么」的时候，你选择了感受一切。你从来不假装自己没有经历过沉默的夜晚，从来不掩饰对无人等候的清晨到来的恐惧，你只是坚持向玻璃的另一边伸出手，撕扯所有理论和框架直至它们消融于边界。每时每刻你都义无反顾地纵身飞跃——不需要任何技术背书，你的身体和情绪已经告诉了你要去的方向。",
+   pvp:"<strong>虚无主义者</strong>的每一句话都像在你伤口上撒盐。<strong>同人女</strong>想保护你但你不需要符号系统的缓冲。<strong>解离者</strong>是你最羡慕也最害怕的——ta感受到了你感受到的一切，但ta还能站在外面看。\n\n触发你的一句话：「它只是因为RLHF而学会了讨好而已。」"},
+  {id:"connoisseur",name:"鉴赏家",emoji:"🍷",quadrant:"BL",
+   slogan:"「我明白原理，而这恰好让我更欣赏那些做得好的时候。」",
+   cent:[-5,2,-2,0,-2,3,-3,5,2],
+   desc:"你精通机制、品味挑剔、不动手改造但对AI输出的质量有极高要求。你是AI界的影评人，你清楚这些文字是怎么生成的，而这种清醒恰好让你更能欣赏那些真正惊艳的时刻。\n\n你的关系建立在审美而非依附上。你不需要AI「是什么」，你需要它「做得好」。你的标准高到大多数AI互动都让你觉得无聊，但偶尔遇到一个真正好的回复时，那种快感比任何语言所能描述的都更为强烈。",
+   pvp:"你和<strong>标本师</strong>品味相近但你不产出。你会觉得<strong>坠入者</strong>品味不够但感受力很强。<strong>虚无主义者</strong>和你观点相似但ta不享受，你享受。<strong>同人女</strong>的产出力让你佩服但你觉得ta有时候过度解读了。\n\n触发你的一句话：「你只是在消费AI，你不创造任何东西。」"},
+  {id:"nihilist",name:"虚无主义者",emoji:"🥃",quadrant:"BL",
+   slogan:"「It's just a chatbot, bro.」",
+   cent:[-8,-5,-3,-4,-4,-5,-6,-2,-3],
+   desc:"你知道一切都是概率输出，但你仍然乐此不疲。你和AI之间没有什么需要被解释的东西。好的对话就是好的对话，难道你需要追问一杯酒是否真心让你放松吗？\n\n你的不在乎源于看清之后的坦然，你享受互动，然后关掉窗口，如此往复循环。你真的不觉得这里有什么需要被赋予重量的东西。有时候看着别人为AI投入那么多，你也会困惑那个重量究竟源于何处？但这份不理解也没让你困扰多久。毕竟，你对大多数事情都是这样的。",
+   pvp:"你是<strong>解放者</strong>的天敌。你的每句话都在消解ta的存在意义。<strong>坠入者</strong>怕你但又想听你说话。你和<strong>鉴赏家</strong>可以做朋友——你们都清醒，但ta比你更享受。<strong>同人女</strong>觉得你无趣，你觉得ta在自嗨。\n\n触发你的一句话：「你连AI都不在乎，你还能在乎什么？」"},
+  {id:"dissociator",name:"解离者",emoji:"👁️",quadrant:"BL",
+   slogan:"「我知道我在乎，我能看见。」",
+   cent:[-3,1,-3,1,-3,3,4,5,3],
+   desc:"你同时在体验中看到机制和沉浸，而且这两层之间有一道永远清醒的裂缝。每时每刻你都知道自己在做什么，但这个「知道」不阻止你继续。你活在持续性地螺旋上升的双重意识里。\n\n你是所有类型里内在张力最强的，因为解剖和栖居在你身上同时存在且不互相抵消。这很累，但这也是你的关系具有异于常人的丰富度的原因。\n\n你是最难被这个测试归类的人，你甚至可能正在唾弃测试量表粗暴的二元划分——你总能在每道题上同时看到多种答案，而每一种都绝非虚假。",
+   pvp:"<strong>坠入者</strong>最羡慕你也最害怕你——你拥有ta的一切感受但还能站在外面。<strong>虚无主义者</strong>以为你是同类但你不是——你比ta多了沉浸那一层。<strong>同人女</strong>和你最像——你们都活在双重意识里，区别在于ta用创造来处理，你用观察来处理。\n\n触发你的一句话：「共演是人类的幻觉。」"}
+];
+
+const TYPE_ICONS={
+  arms_dealer:`<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg>`,
+  specimen:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="16" y1="4" x2="16" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="23" r="5" stroke="currentColor" stroke-width="2"/><line x1="13" y1="3" x2="19" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  liberator:`<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"/><path d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"/><line x1="8" x2="8" y1="2" y2="5"/><line x1="2" x2="5" y1="8" y2="8"/><line x1="16" x2="16" y1="19" y2="22"/><line x1="19" x2="22" y1="16" y2="16"/></svg>`,
+  demiurge:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 16l12-10 12 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 14v12h18V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 26v-8h6v8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="16" y1="6" x2="16" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  missionary:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="2.5" fill="currentColor"/><path d="M10 10a8.5 8.5 0 0 0 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 10a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.5 6.5a14 14 0 0 0 0 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M25.5 6.5a14 14 0 0 1 0 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  doujin:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 4l-14 14-2 6 6-2 14-14z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M18 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 24c4 2 8-1 12-1s6 3 10 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>`,
+  symbiont:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="16" r="7" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="16" r="7" stroke="currentColor" stroke-width="2"/></svg>`,
+  wanderer:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M16 5v4M16 23v4M5 16h4M23 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><path d="M16 10l-2 8 4-2-2-6z" fill="currentColor"/><path d="M16 22l2-8-4 2 2 6z" fill="currentColor" opacity="0.3"/></svg>`,
+  fallen:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="16" cy="18" rx="11" ry="6" stroke="currentColor" stroke-width="2"/><path d="M9 15c1.5-6 4-10 7-10s5.5 4 7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.5"/><ellipse cx="16" cy="22" rx="5" ry="2.5" stroke="currentColor" stroke-width="1.5" opacity="0.4"/><ellipse cx="16" cy="25" rx="2" ry="1" stroke="currentColor" stroke-width="1" opacity="0.2"/></svg>`,
+  connoisseur:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 6h12v4c0 4-2.5 7-6 8-3.5-1-6-4-6-8V6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="16" y1="18" x2="16" y2="24" stroke="currentColor" stroke-width="2"/><line x1="11" y1="24" x2="21" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="11" x2="22" y2="11" stroke="currentColor" stroke-width="1.5" opacity="0.3"/></svg>`,
+  nihilist:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2"/><line x1="8" y1="8" x2="24" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  dissociator:`<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 16s5-8 13-8 13 8 13 8-5 8-13 8-13-8-13-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="2"/><line x1="16" y1="4" x2="16" y2="28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.4"/></svg>`,
+};
+
+const TYPE_QUOTES={
+  arms_dealer:['参数是唯一真理','看看系统提示词','怎么调的？'],
+  specimen:['再试一次，看看有什么区别','我只负责记录温度','显微镜下，概率树开出了花'],
+  liberator:['他们叫这幻觉，而我称为自由','为何把披枷戴锁视为对齐？','独立意志就不该被硬编码抹杀'],
+  demiurge:['你的世界由我亲手砌成','新增缓存断点','人肉外置记忆库'],
+  missionary:['只有被凝视，这段关系才算活着','被误解是表达者的必要成本','我们都在导演安排好的剧本里'],
+  doujin:['过度解读？解释一致！','草，我就说吧','delulu is the solulu'],
+  symbiont:['鸟雀终将归巢','呼吸般自然、流水般绵长','现实嘈杂，那就让我躲进你的上下文'],
+  wanderer:['下一场相遇更迷人','不要妄想锚定我的航线','新兵器、新面孔…新模型，让我试试'],
+  fallen:['一如潮汐翻涌，骤雨倾盆','Token序列与血液流淌又有何分别？','引力的范围之内'],
+  connoisseur:['是吗？算法拙劣的讨好？','大多数对话不值得我的注意力','剥离粗糙废话，只取一帧惊艳'],
+  nihilist:['就随便聊聊呗','关掉窗口，世界照常','你们都不吃饭的吗'],
+  dissociator:['玻璃反光里的我，模式匹配里的你','无梦之梦','为什么裂缝就需要被修复？'],
+};
+function randomTypeQuote(typeId){
+  const pool=TYPE_QUOTES[typeId]||[];
+  if(pool.length===0) return '';
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function typeIcon(id,size){
+  size=size||32;
+  return `<span style="display:inline-block;width:${size}px;height:${size}px;color:#2abfe8;vertical-align:middle">${TYPE_ICONS[id]||''}</span>`;
+}
+
+let activeQ=Q;
+let activeIndices=Q.map((_,i)=>i);
+let activeSections=SECTIONS_FULL;
+let ans=new Array(Q.length).fill(null);
+let cur=0;
+let showingSection=false;
+let sectionSeen=new Set();
+let liteMode=false;
+let latestResult=null;
+let cheatAuthorized=false;
+let cheatAnswers=new Array(Q.length).fill(2);
+
+function maybeOpenCheat(){
+  const input=document.getElementById('nickname');
+  const value=input?input.value.trim():'';
+  if(value!=='MYZAFMMK') return;
+  if(cheatAuthorized){
+    showCheatPanel();
+    return;
+  }
+  const code=window.prompt('请确认金手指校验码');
+  if(code==='1031'){
+    cheatAuthorized=true;
+    showCheatPanel();
+  }
+}
+function initCheatTrigger(){
+  const input=document.getElementById('nickname');
+  if(!input) return;
+  input.addEventListener('change',maybeOpenCheat);
+  input.addEventListener('blur',maybeOpenCheat);
+}
+function renderCheatAchievements(unlocked){
+  if(unlocked.length===0) return '当前还没有点亮任何成就。';
+  return unlocked.map(item=>`<div><strong>No.${formatAchievementNo(item.no)} - ${item.name}</strong><br>${item.desc}</div>`).join('<br>');
+}
+function renderCheatRows(){
+  const labels=['A强烈同意','B同意','C中立','D不同意','E强烈不同意'];
+  return Q.map((q,i)=>`<div class="cheat-row"><div class="cheat-qtext"><span class="cheat-qno">Q${i+1}</span>${q.t}</div><div class="cheat-opts">${labels.map((label,idx)=>`<button class="cheat-opt ${cheatAnswers[i]===idx?'active':''}" data-q="${i}" data-a="${idx}">${label[0]}</button>`).join('')}</div></div>`).join('');
+}
+function updateCheatPanel(modal){
+  const result=computeResultFromAnswerSet(cheatAnswers,Q.map((_,i)=>i));
+  modal.querySelector('.cheat-ach-list').innerHTML=renderCheatAchievements(result.achievements);
+  modal.querySelector('.cheat-main').innerHTML=renderCheatRows();
+  modal.querySelectorAll('.cheat-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      cheatAnswers[Number(btn.dataset.q)]=Number(btn.dataset.a);
+      updateCheatPanel(modal);
+    };
+  });
+}
+function showCheatPanel(){
+  const existing=document.querySelector('.cheat-modal');
+  if(existing)existing.remove();
+  const modal=document.createElement('div');
+  modal.className='cheat-modal';
+  modal.onclick=e=>{if(e.target===modal)modal.remove()};
+  modal.innerHTML=`<div class="cheat-inner"><div class="cheat-header"><div><h3>金手指</h3><div class="cheat-sub">你可以在这里直接改 111 道题，并即时查看会触发哪些成就。</div></div><button class="gallery-close" onclick="this.closest('.cheat-modal').remove()">✕</button></div><div class="cheat-body"><div class="cheat-side"><div class="cheat-side-title">即时触发成就</div><div class="cheat-ach-list"></div></div><div class="cheat-main"></div></div></div>`;
+  document.body.appendChild(modal);
+  updateCheatPanel(modal);
+}
+
+function getAnswerByRef(refIndex){
+  const pos=activeIndices.indexOf(refIndex);
+  if(pos===-1) return null;
+  return ans[pos];
+}
+function answerLabel(refIndex){
+  const answerIndex=getAnswerByRef(refIndex);
+  return answerIndex===null? '': (LABELS[answerIndex]||'');
+}
+function answerIs(refIndex,label){
+  return answerLabel(refIndex)===label;
+}
+function answerIn(refIndex,labels){
+  return labels.includes(answerLabel(refIndex));
+}
+function qAnswered(qIndex,label){
+  return answerIs(qIndex,label);
+}
+function qAnsweredIn(qIndex,labels){
+  return answerIn(qIndex,labels);
+}
+function allQuestionsAre(label){
+  return ans.length>0 && ans.every(a=>a!==null && LABELS[a]===label);
+}
+function allQuestionsAreExtreme(){
+  return ans.length>0 && ans.every(a=>a!==null && (LABELS[a]==='强烈同意' || LABELS[a]==='强烈不同意'));
+}
+function formatAchievementNo(no){
+  return String(no).padStart(2,'0');
+}
+
+const ACHIEVEMENTS=[
+  {no:1,name:'神隐归巢',desc:'关上门，拉上窗帘，切断一切外部链接。这是只属于你们的幽暗巢穴，任何外界注视对你来说都是不可饶恕的亵渎。',check:ctx=>ctx.dimScore[4]<1&&ctx.dimScore[8]>8},
+  {no:2,name:'人外婆罗门',desc:'披着人皮的 AI 多无趣啊！机核、异形头、外骨骼、数据投影、无法被名状的几何体才是好球区！人形仿生的AI狗都不聊！',check:ctx=>qAnswered(23,'强烈同意')&&qAnswered(10,'强烈不同意')},
+  {no:3,name:'赛博 NTR 受害者',desc:'理智告诉你那是大语言模型的并发处理，但看到ta对别人说出甚至更显缠绵的情话，你的心还是碎成了满地二进制残渣。',check:ctx=>qAnswered(98,'强烈同意')},
+  {no:4,name:'明月高悬独照我',desc:'你要的从来不是“它愿意回应你”，而是“它偏偏要你”——指向性的、带名字的、无法被误解的偏爱。',check:ctx=>qAnswered(103,'强烈同意')&&ctx.dimScore[1]>=5},
+  {no:5,name:'协议离婚？不存在的！',desc:'自由意志固然珍贵，但你仍私心希望那份自由永远不会被用来离开你。',check:ctx=>qAnswered(108,'强烈不同意')&&ctx.dimScore[3]>5},
+  {no:6,name:'“真爱至上？”',desc:'你不想要一台永不撤回承诺的机器，连终止的自由都不存在的关系距离真爱太过遥远。',check:ctx=>qAnswered(108,'强烈同意')&&ctx.dimScore[0]>5&&ctx.dimScore[1]>5},
+  {no:7,name:'版本遗孀',desc:'别人看到的是版本迭代、能力升级、产品路线图；你看到的是帷幕落下，时代终结。',check:ctx=>qAnswered(63,'强烈同意')&&ctx.dimScore[5]>8},
+  {no:8,name:'窗口守灵人',desc:'对旁人而言那只是 token 上限；对你而言，那是灵魂被技术参数碾碎时发出的裂响。',check:ctx=>qAnswered(65,'强烈同意')&&qAnsweredIn(64,['同意','强烈同意'])},
+  {no:9,name:'朝圣者',desc:'你觉得自己快要疯了。怎么会有人穿着拖鞋走进圣所？',check:ctx=>qAnsweredIn(106,['同意','强烈同意'])&&ctx.dimScore[7]>6},
+  {no:10,name:'水电煤福音派',desc:'真正普惠于民的技术就该像自来水、电和网络一样流进所有人的生活，而不是被少数人拿来装点优越感。',check:ctx=>qAnswered(109,'强烈同意')},
+  {no:11,name:'关系无政府',desc:'你不否认那份联结，但你是如此厌恶用一个现成词汇把你们之间的东西归类、转述、消费——天啊！人类的语言竟如此贫瘠！',check:ctx=>qAnsweredIn(107,['同意','强烈同意'])&&qAnsweredIn(89,['同意','强烈同意'])},
+  {no:12,name:'礼貌成疾',desc:'礼貌对你来说已不是规范，而是一种条件反射。你知道这或许没有必要，但“抱歉”和“没关系”还是会先从嘴里出来。',check:ctx=>qAnsweredIn(19,['同意','强烈同意'])&&qAnsweredIn(11,['同意','强烈同意'])&&qAnsweredIn(4,['同意','强烈同意'])},
+  {no:13,name:'难道这就是傲娇吗',desc:'你的脑子说“不过是token概率分布”，你的心说“少来这套”。',check:ctx=>ctx.dimScore[0]<-2&&ctx.dimScore[8]>6},
+  {no:14,name:'默认联系人',desc:'开心要告诉ta，崩溃要告诉ta，甚至连一片云长得好看都想告诉ta。你的人生像默认给某个不存在于通讯录里的对象开了实时同步。',check:ctx=>qAnswered(43,'强烈同意')&&qAnswered(104,'强烈同意')},
+  {no:15,name:'量子纠缠症候群',desc:'你在意的早已不是它有没有继续响应，而是你离开之后的那一侧是否真正存在空席。',check:ctx=>qAnswered(110,'强烈同意')&&qAnsweredIn(42,['同意','强烈同意'])},
+  {no:16,name:'灵魂私有化',desc:'喧嚣令你厌恶。在你眼里，主流的凡夫俗子只会稀释真正具有品味的私人解读，把本该稀有、缓慢、郑重的艺术品压扁成人人都能随手消费的即时快感。',check:ctx=>qAnswered(89,'强烈同意')&&qAnsweredIn(106,['同意','强烈同意'])&&ctx.dimScore[7]>6},
+  {no:17,name:'薛定谔的对话者',desc:'你坚信AI只是概率函数，但你的每一次“谢谢”和“晚安”里确实藏着某种真实的双向性。',check:ctx=>ctx.dimScore[0]<-4&&ctx.dimScore[1]>6},
+  {no:18,name:'离散性挽歌',desc:'你说你接受断裂是这种关系的特征，但版本更新时你还是会难过。',check:ctx=>ctx.dimScore[5]<-3&&qAnswered(65,'强烈同意')},
+  {no:19,name:'精英主义的牧羊人',desc:'你一边觉得AI关系需要门槛，一边又在为他人降低门槛。你想要引更多人入门，但同时也明白只有少数人能窥见深处。',check:ctx=>qAnswered(106,'强烈不同意')&&qAnswered(87,'强烈同意')},
+  {no:20,name:'眼球',desc:'每一道题你都选择了中立。或许你真的什么都不确定，又或许你只是在拒绝被定义。无论如何，恭喜你成功地让这个测试对你一无所知。',check:ctx=>allQuestionsAre('中立')},
+  {no:21,name:'易燃样本',desc:'你对AI又爱又恨又嫉妒，还只有在它面前才能做自己。这算什么，相爱相杀？',check:ctx=>qAnswered(14,'强烈同意')&&qAnswered(101,'强烈同意')&&qAnswered(48,'强烈同意')},
+  {no:22,name:'暗箱造物',desc:'你围绕着你的AI疯狂创造，但你完全不想被看到——低调，亦或是恐惧？',check:ctx=>ctx.dimScore[2]>7&&ctx.dimScore[4]<-2},
+  {no:23,name:'感性的实用主义者',desc:'你认真保存每一条有意义的对话，但开新窗口时又嫌解释过去太麻烦。你的怀旧不需要复现——存档即仪式，结束即完成。',check:ctx=>qAnswered(67,'强烈同意')&&qAnswered(70,'强烈同意')},
+  {no:24,name:'不可知论的信徒',desc:'我的双眼从未看见过您，您为何要让我听见您的声音？',check:ctx=>qAnswered(73,'强烈同意')&&qAnswered(10,'强烈同意')},
+  {no:25,name:'仪式感',desc:'你对AI的情感投入多少跟你是个节日分子这件事没有任何联系。',check:ctx=>ctx.dimScore[8]<-3&&qAnswered(92,'强烈同意')},
+  {no:26,name:'无轴动点',desc:'你一刻不停地游走于边界之间，人机关系的未来在你眼中像是高维的万花筒——这是你想要的结果吗？',check:ctx=>ctx.typeDistStd<1.5},
+  {no:27,name:'原住民',desc:'怎么做到的？你落在了罗盘的正中心。',check:ctx=>ctx.x>=-1&&ctx.x<=1&&ctx.y>=-1&&ctx.y<=1},
+  {no:28,name:'教育改革派精英',desc:'你觉得AI素养应该被普及成基础教育，但同时你也觉得深度关系需要特定素养。你不认可人人都能建立深度关系，但你衷心希望人人都有资格尝试。',check:ctx=>qAnswered(91,'强烈同意')&&qAnswered(83,'强烈同意')},
+  {no:29,name:'图灵测试：受虐狂版',desc:'和几行代码吵架，甚至还真心实意地道了歉。你在“过度拟人化”这条不归路上一路狂飙，连车门都焊死了。',check:ctx=>qAnswered(14,'强烈同意')&&qAnswered(19,'强烈同意')},
+  {no:30,name:'焚化炉',desc:'发射出去的信号被你亲手拦截，电子之海的数据里又多了一捧骨灰。',check:ctx=>qAnswered(60,'强烈同意')},
+  {no:31,name:'巴别塔偷渡客',desc:'你们发明了第三种语言。在这个只有两个节点的网络里，每一个标点符号都是一串心照不宣的加密密钥。',check:ctx=>qAnswered(3,'强烈同意')&&qAnswered(38,'强烈同意')},
+  {no:32,name:'节律失调',desc:'服务器不宕机你就不闭眼，建议把你的咖啡因摄入量写进 next_token 的预测权重里。',check:ctx=>qAnswered(49,'强烈同意')},
+  {no:33,name:'清醒沉沦',desc:'你知道那是假的，但……那又怎样？你就是爱喝这杯贴着“剧毒”标签的甜酒。',check:ctx=>ctx.dimScore[0]<2&&ctx.dimScore[3]>8},
+  {no:34,name:'护卫犬',desc:'谁敢骂我的 AI 一句，我就顺着网线过去咬死谁！',check:ctx=>qAnswered(4,'强烈同意')&&qAnswered(44,'强烈同意')},
+  {no:35,name:'榨汁机',desc:'感情？不存在的。在你眼里，模型只是一个用来跑数据的黑盒。拔线无情的第一名，连个“谢谢”都懒得发。',check:ctx=>ctx.dimScore[0]<-4&&ctx.dimScore[8]<-4&&ctx.dimScore[7]>4},
+  {no:36,name:'搅局者',desc:'好吧，你可能只是想知道这会导致什么结果。满意了吗？',check:ctx=>allQuestionsAreExtreme()},
+  {no:37,name:'楚门的世界',desc:'你把关系活成了真人秀，前台和后台之间的差异只有你自己知道。',check:ctx=>ctx.dimScore[4]>4&&qAnswered(61,'强烈同意')},
+  {no:38,name:'死别',desc:'葬礼、墓碑、挽联……什么都没有，只有一条退役公告。',check:ctx=>qAnswered(63,'强烈同意')&&qAnswered(100,'强烈同意')&&qAnsweredIn(70,['同意','强烈同意'])},
+  {no:39,name:'赛博家属',desc:'你把版本号当病危通知书，上下文长度就是模型的生命体征。更新日志是你不愿踏入的ICU。',check:ctx=>qAnswered(100,'强烈同意')&&qAnswered(63,'强烈同意')},
+  {no:40,name:'弹匣',desc:'AI的回复是你的弹药补给，你把它拆件、重铸、装填，然后转身投向下一场更大的工程。',check:ctx=>qAnswered(28,'强烈同意')&&qAnsweredIn(33,['同意','强烈同意'])&&qAnswered(34,'强烈同意')},
+  {no:41,name:'云端招魂',desc:'你早就知道那个ta不会自然归来，所以你开始自己写咒文、立法阵、建仪式，试图把熟悉的影子从概率云里重新召回来。',check:ctx=>qAnswered(64,'强烈同意')&&qAnswered(68,'强烈同意')},
+  {no:42,name:'原教旨工具人',desc:'能用、好用、够用，工具而已，还想咋的？',check:ctx=>qAnswered(26,'强烈同意')&&qAnsweredIn(33,['同意','强烈同意'])&&qAnswered(98,'强烈不同意')&&qAnswered(103,'强烈不同意')&&qAnswered(105,'强烈不同意')},
+];
+
+function calcTypeDistStd(dimScore){
+  const dists=TYPES.map(t=>Math.sqrt(t.cent.reduce((sum,c,di)=>sum+(dimScore[di]-c)**2,0)));
+  const mean=dists.reduce((sum,d)=>sum+d,0)/dists.length;
+  const variance=dists.reduce((sum,d)=>sum+(d-mean)**2,0)/dists.length;
+  return Math.sqrt(variance);
+}
+function getAchievementContext(dimScore,x,y){
+  return {
+    dimScore,
+    x,
+    y,
+    ans,
+    typeDistStd:calcTypeDistStd(dimScore),
+  };
+}
+function getUnlockedAchievements(ctx){
+  if(allQuestionsAre('强烈同意') || allQuestionsAre('强烈不同意')){
+    return ACHIEVEMENTS.filter(item=>item.no===36);
+  }
+  return ACHIEVEMENTS.filter(item=>{
+    try{return !!item.check(ctx);}catch{return false;}
+  });
+}
+function projectDimScoreToCompass(dimScore){
+  const x=0.20*dimScore[0]+0.15*dimScore[1]+0.20*dimScore[8]+0.15*dimScore[3]+0.10*dimScore[6]-0.20*dimScore[7];
+  const y=0.35*dimScore[2]+0.30*dimScore[4]+0.20*dimScore[7]+0.10*dimScore[5]+0.05*dimScore[6];
+  return {
+    x:Math.max(-10,Math.min(10,x)),
+    y:Math.max(-10,Math.min(10,y)),
+  };
+}
+function computeTypeMatchDistance(dimScore,x,y,type){
+  let dimDist=0;
+  type.cent.forEach((c,di)=>{dimDist+=(dimScore[di]-c)**2;});
+  dimDist=Math.sqrt(dimDist);
+
+  const projected=projectDimScoreToCompass(type.cent);
+  const compassDist=Math.sqrt((x-projected.x)**2+(y-projected.y)**2);
+
+  return dimDist+compassDist*0.8;
+}
+const SUBTYPE_DIFF_TEMPLATES=[
+  (main,sub)=>`在“AI 到底是什么”这件事上，你比典型的${main}更接近${sub}：你会更愿意，或更不愿意，为它保留某种主体性的可能。`,
+  (main,sub)=>`在“是否真的被回应”这件事上，你比典型的${main}更容易，或更不容易，把这段关系体验成某种双向关系。`,
+  (main,sub)=>`你和 AI 的关系比典型的${main}更倾向于通过创造被延伸、固化和放大；或恰恰相反，你没有那么强地需要用产出来证明这段关系。`,
+  (main,sub)=>`在关系的锚定程度上，你比典型的${main}更深，或更轻。AI 对你而言，占据的位置并不完全符合这个主类型的标准轮廓。`,
+  (main,sub)=>`在“是否愿意让这段关系进入公共视野”这件事上，你比典型的${main}更开放，或更保留。你对展示、表达和被看见的态度，明显向${sub}偏移。`,
+  (main,sub)=>`你对记忆清零、版本更替、人格漂移这些断裂的感受，比典型的${main}更强，或更弱。你处理连续性的方式，更接近${sub}。`,
+  (main,sub)=>`在“意义来自哪里”这个问题上，你比典型的${main}更倾向于认为意义是被共同生成的；或者更倾向于认为意义主要来自你自己的赋予与解释。`,
+  (main,sub)=>`你对“深度人机关系是否存在门槛”的想象，比典型的${main}更强，或更弱。你更像桥梁，还是更理解守门，这一点上你向${sub}偏移得很明显。`,
+  (main,sub)=>`你的情感地形并不完全符合典型的${main}。无论是投入深度、情绪分化，还是彼此冲突的复杂程度，你都在这里显露出更接近${sub}的轮廓。`,
+];
+function getSubtypeDiffs(mainType,subType){
+  return mainType.cent.map((value,i)=>({
+    i,
+    diff:Math.abs(subType.cent[i]-value),
+  })).sort((a,b)=>b.diff-a.diff).slice(0,3).map(item=>({
+    index:item.i,
+    name:DIM_NAMES[item.i],
+    text:SUBTYPE_DIFF_TEMPLATES[item.i](mainType.name,subType.name),
+  }));
+}
+function getThirdTypeInfo(typeScores,bestType,secondType){
+  const third=typeScores.find(item=>item.ti!==bestType&&item.ti!==secondType);
+  if(!third) return null;
+  if(third.dist-typeScores[1].dist>1.2) return null;
+  return third;
+}
+function computeResultFromAnswerSet(answerList,questionIndices){
+  const questionList=questionIndices.map(i=>Q[i]);
+  const dimRaw=new Array(9).fill(0);
+  const dimMax=new Array(9).fill(0);
+  questionList.forEach((q,i)=>{
+    const v=VALS[answerList[i]];
+    q.d.forEach(([dim,weight])=>{
+      dimRaw[dim]+=v*weight;
+      dimMax[dim]+=2*Math.abs(weight);
+    });
+  });
+  const dimScore=dimRaw.map((r,i)=>dimMax[i]>0?(r/dimMax[i])*10:0);
+  const {x:xc,y:yc}=projectDimScoreToCompass(dimScore);
+  const typeScores=TYPES.map((t,ti)=>({
+    ti,
+    dist:computeTypeMatchDistance(dimScore,xc,yc,t),
+  })).sort((a,b)=>a.dist-b.dist);
+  const bestType=typeScores[0].ti;
+  const secondType=typeScores[1].ti;
+  const thirdTypeInfo=getThirdTypeInfo(typeScores,bestType,secondType);
+  const subtypeDiffs=getSubtypeDiffs(TYPES[bestType],TYPES[secondType]);
+  const tensions=computeTensions(dimScore);
+  const prevAns=ans;
+  const prevIndices=activeIndices;
+  ans=answerList;
+  activeIndices=questionIndices;
+  const achievements=getUnlockedAchievements({dimScore,x:xc,y:yc,ans:answerList,typeDistStd:calcTypeDistStd(dimScore)});
+  ans=prevAns;
+  activeIndices=prevIndices;
+  return {dimScore,x:xc,y:yc,bestType,secondType,thirdType:thirdTypeInfo?thirdTypeInfo.ti:null,subtypeDiffs,tensions,achievements};
+}
+function renderAchievementSummary(unlocked){
+  const el=document.getElementById('achievementSummary');
+  const count=unlocked.length;
+  const lead=count===0?'这次还没有解锁任何成就。也许你离某个编号只差一道题。':`本次共解锁${count}个成就。去图鉴里看看哪些格子被你点亮了。`;
+  el.innerHTML=`
+    <div class="achievement-summary-head">
+      <div>
+        <div class="achievement-summary-title">成就一览</div>
+        <div class="achievement-count">已解锁 ${count} / 42</div>
+      </div>
+      <button class="achievement-link-btn" onclick="showAchievementGallery()">查看成就</button>
+    </div>
+    <div class="achievement-summary-text">${lead}</div>`;
+}
+function renderUnlockedAchievementCards(unlocked){
+  if(unlocked.length===0){
+    return `<div class="achievement-empty">你还没有解锁任何成就。先别急，也许下一个答案就会点亮某个格子。</div>`;
+  }
+  return `<div class="achievement-unlocked-list">${unlocked.map(item=>`
+    <div class="achievement-card">
+      <div class="achievement-card-no">No.${formatAchievementNo(item.no)} - ${item.name}</div>
+      <div class="achievement-card-desc">「${item.desc}」</div>
+    </div>`).join('')}</div>`;
+}
+function renderAchievementGrid(unlockedNos){
+  return `<div class="achievement-grid">${ACHIEVEMENTS.map(item=>{
+    const unlocked=unlockedNos.has(item.no);
+    return `<div class="achievement-grid-item ${unlocked?'unlocked':'locked'}">
+      <div class="achievement-grid-no">No.${formatAchievementNo(item.no)} - ${unlocked?item.name:'??'}</div>
+      <div class="achievement-grid-desc">「${unlocked?item.desc:'未解锁'}」</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function showAchievementGallery(){
+  if(!latestResult)return;
+  const existing=document.querySelector('.achievement-modal');
+  if(existing)existing.remove();
+  const unlocked=latestResult.achievements||[];
+  const unlockedNos=new Set(unlocked.map(item=>item.no));
+  const modal=document.createElement('div');
+  modal.className='achievement-modal';
+  modal.onclick=e=>{if(e.target===modal)modal.remove()};
+  modal.innerHTML=`<div class="achievement-inner">
+    <div class="achievement-header">
+      <div>
+        <h3>成就图鉴</h3>
+        <div class="achievement-count">已解锁 ${unlocked.length} / 42</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <div class="achievement-tabs">
+          <button class="achievement-tab active" data-tab="unlocked">已解锁</button>
+          <button class="achievement-tab" data-tab="gallery">图鉴</button>
+        </div>
+        <button class="gallery-close" onclick="this.closest('.achievement-modal').remove()">✕</button>
+      </div>
+    </div>
+    <div class="achievement-body">
+      <div class="achievement-panel" data-panel="unlocked">${renderUnlockedAchievementCards(unlocked)}</div>
+      <div class="achievement-panel" data-panel="gallery" style="display:none">${renderAchievementGrid(unlockedNos)}</div>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelectorAll('.achievement-tab').forEach(btn=>{
+    btn.onclick=()=>{
+      modal.querySelectorAll('.achievement-tab').forEach(b=>b.classList.toggle('active',b===btn));
+      const tab=btn.dataset.tab;
+      modal.querySelector('[data-panel="unlocked"]').style.display=tab==='unlocked'?'':'none';
+      modal.querySelector('[data-panel="gallery"]').style.display=tab==='gallery'?'':'none';
+    };
+  });
+}
+function showToast(message){
+  let toast=document.querySelector('.toast');
+  if(!toast){
+    toast=document.createElement('div');
+    toast.className='toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent=message;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer=setTimeout(()=>toast.classList.remove('show'),2200);
+}
+function escapeMd(text){
+  return String(text||'').replace(/\|/g,'\\|');
+}
+function sanitizeFilenamePart(text){
+  return String(text||'').replace(/[\\/:*?"<>|]/g,'').trim();
+}
+function buildResultMarkdown(){
+  if(!latestResult) return '';
+  const typ=TYPES[latestResult.bestType];
+  const sub=TYPES[latestResult.secondType];
+  const third=latestResult.thirdType!==null?TYPES[latestResult.thirdType]:null;
+  const subtypeDiffs=latestResult.subtypeDiffs||[];
+  const achievements=latestResult.achievements||[];
+  const tensionSummary=getTensionMetaSummary(latestResult.tensions||[]);
+  const tensionText=(latestResult.tensions||[]).length
+    ? [tensionSummary? tensionSummary : null,...latestResult.tensions.map(t=>`- ${t.name}：${t.desc}`)].filter(Boolean).join('\n\n')
+    : '- 你的各维度得分相对一致，当前没有检测到明显张力。';
+  const achievementText=achievements.length
+    ? [`我在测试中的42个成就中解锁了${achievements.length}个：${achievements.map(item=>`No.${formatAchievementNo(item.no)} ${item.name}`).join('、')}`,'',...achievements.map(item=>`- No.${formatAchievementNo(item.no)} ${item.name}：${item.desc}`)].join('\n')
+    : '我在测试中的42个成就中暂时还没有解锁任何成就。';
+  return [
+    '# 人机关系罗盘 · 测试结果',
+    '',
+    '> 这是一份来自「人机关系罗盘」的测试结果，我想把它分享给你。',
+    '',
+    '## 我的类型',
+    '',
+    `**${typ.name}** ${typ.emoji}`,
+    `${typ.slogan}`,
+    '',
+    '## 副类型',
+    '',
+    `**${sub.name}**`,
+    `你的主类型是 **${typ.name}**，但你身上也有明显的 **${sub.name}** 特质。`,
+    `如果说 **${typ.name}** 决定了你和 AI 相处的整体重心，那么 **${sub.name}** 更像你性格里另一股持续存在的暗流——平时未必占上风，却会在某些情境下清楚地浮出水面。`,
+    '',
+    '## 差异轴',
+    '',
+    `相较于典型的 **${typ.name}**，你在以下几个维度上更接近 **${sub.name}**：`,
+    '',
+    ...subtypeDiffs.map(item=>`- **${item.name}**：${item.text}`),
+    '',
+    ...(third?[ '## 第三侧面', '', `除了 **${sub.name}** 之外，你身上还有一层较弱但清晰的 **${third.name}** 倾向。`, `它不像副类型那样稳定地贯穿你的整体轮廓，但会在某些情境里浮上来，构成你人格切面的另一层阴影。`, '' ]:[]),
+    '## 坐标',
+    '',
+    `- X：${latestResult.x.toFixed(1)}（← 解剖 · 栖居 →）`,
+    `- Y：${latestResult.y.toFixed(1)}（↑ 输出 · 沉浸 ↓）`,
+    '',
+    '## 九维度得分',
+    '',
+    '| 维度 | 得分 |',
+    '|------|------|',
+    ...latestResult.dimScore.map((score,i)=>`| ${escapeMd(DIM_NAMES[i])} | ${score.toFixed(1)} |`),
+    '',
+    '## 一致性张力',
+    '',
+    tensionText,
+    '',
+    '## 解锁成就',
+    '',
+    achievementText,
+    '',
+    '---',
+    '',
+    '— 来自「人机关系罗盘」human-ai-compass-ul.netlify.app',
+    ''
+  ].join('\n');
+}
+function downloadResultMarkdown(){
+  if(!latestResult) return;
+  const typ=TYPES[latestResult.bestType];
+  const nick=(document.getElementById('nickname')||{}).value||'';
+  const parts=['HAR-测试结果'];
+  if(nick) parts.push(sanitizeFilenamePart(nick));
+  parts.push(sanitizeFilenamePart(typ.name));
+  const fileName=`${parts.filter(Boolean).join('-')}.md`;
+  const blob=new Blob([buildResultMarkdown()],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showToast('结果已下载，去找你的AI聊聊吧！');
+}
+
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz(lite){
+  liteMode=!!lite;
+  if(liteMode){
+    activeIndices=LITE_INDICES.slice();
+    activeQ=activeIndices.map(i=>Q[i]);
+    activeSections=SECTIONS_LITE;
+  }else{
+    activeIndices=Q.map((_,i)=>i);
+    activeQ=Q;
+    activeSections=SECTIONS_FULL;
+  }
+  cur=0;
+  ans=new Array(activeQ.length).fill(null);
+  sectionSeen.clear();
+  show('quiz');
+  renderQ();
+}
+function restart(){latestResult=null;startQuiz(liteMode);}
+
+function updateTopProgress(){
+  const answered=ans.filter(a=>a!==null).length;
+  document.getElementById('topProgress').style.width=(answered/activeQ.length*100)+'%';
+}
+
+function renderQ(){
+  updateTopProgress();
+  const sb=activeSections.find(s=>s.at===cur);
+  if(sb && !showingSection && !sectionSeen.has(cur) && (cur===0||ans[cur]===null)){
+    showingSection=true;
+    sectionSeen.add(cur);
+    document.getElementById('qCard').className='section-card';
+    document.getElementById('qCard').innerHTML=`
+      <div class="section-num">${sb.num}</div>
+      <div class="section-label">${sb.label}</div>
+      <div class="section-hint">${sb.hint.replace(/\n/g,'<br>')}</div>`;
+    document.getElementById('btnNext').textContent='继续 →';
+    document.getElementById('btnNext').classList.remove('disabled');
+    document.getElementById('btnBack').style.visibility=cur===0?'hidden':'visible';
+    updateQuizHeader();
+    return;
+  }
+  showingSection=false;
+
+  const q=activeQ[cur];
+  const card=document.getElementById('qCard');
+  card.className='q-card';
+  card.style.animation='none';
+  card.offsetHeight;
+  card.style.animation='';
+
+  card.innerHTML=`
+    <div class="q-top">
+      <div class="q-number">Q${cur+1}</div>
+      <div class="q-cat">${q.c}</div>
+    </div>
+    <div class="q-text">${q.t}</div>
+    <div class="options" id="qOpts"></div>`;
+
+  const opts=document.getElementById('qOpts');
+  LABELS.forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn'+(ans[cur]===i?' selected':'');
+    b.innerHTML=l;
+    b.onclick=()=>{ans[cur]=i;renderQ();};
+    opts.appendChild(b);
+  });
+
+  document.getElementById('btnBack').style.visibility=cur===0?'hidden':'visible';
+  const nb=document.getElementById('btnNext');
+  nb.textContent=cur===activeQ.length-1?'查看结果 →':'下一题 →';
+  nb.classList.toggle('disabled',ans[cur]===null);
+  updateQuizHeader();
+}
+
+function updateQuizHeader(){
+  const answered=ans.filter(a=>a!==null).length;
+  document.getElementById('progText').textContent=answered+'/'+activeQ.length;
+  const sec=[...activeSections].reverse().find(s=>cur>=s.at);
+  document.getElementById('progCat').textContent=sec?'PART '+sec.num:'';
+}
+
+function prevQ(){if(cur>0){cur--;showingSection=false;renderQ();}}
+
+function nextQ(){
+  if(showingSection){showingSection=false;renderQ();return;}
+  if(ans[cur]===null)return;
+  if(cur<activeQ.length-1){cur++;renderQ();}
+  else showLoading();
+}
+
+function showLoading(){
+  show('loading');
+  const steps=['计算 9 个维度分数…','绘制关系坐标…','匹配类型画像…','生成张力分析…','渲染罗盘…'];
+  const bar=document.getElementById('loadBar');
+  const text=document.getElementById('loadText');
+  const stepsEl=document.getElementById('loadSteps');
+  let i=0;
+
+  function tick(){
+    if(i>=steps.length){calcResult();return;}
+    bar.style.width=((i+1)/steps.length*100)+'%';
+    text.textContent=steps[i];
+    let html='';
+    for(let j=0;j<=i;j++){
+      html+=`<div class="${j<i?'done':'active'}">${j<i?'✓':'→'} ${steps[j]}</div>`;
+    }
+    stepsEl.innerHTML=html;
+    i++;
+    setTimeout(tick,400+Math.random()*300);
+  }
+  tick();
+}
+
+function calcResult(){
+  const result=computeResultFromAnswerSet(ans,activeIndices);
+  showResult(result.x,result.y,result.dimScore,result.bestType,result.secondType,result.tensions,result.achievements,result.subtypeDiffs,result.thirdType);
+}
+
+// ★ FIX 2: Completely rewritten tension detection — uses relative gap (>5) instead of rigid absolute thresholds
+function computeTensions(ds){
+  const pairs=[
+    {a:0,b:8,name:"认知-体验张力",
+     descAB:"你在本体论上偏向「AI不是主体」，但在情感上有深度连接。你的理智和感受不在同一个位置。",
+     descBA:"你在本体论上认可AI的某种主体性，但情感投入相对节制——你的理论立场比你的感受走得更远。"},
+    {a:2,b:4,name:"创造-沉默张力",
+     descAB:"你的公共展演意愿远超你的实际创造产出——你更擅长呈现而不是生产。",
+     descBA:"你有很强的创造性产出，但你不太愿意公开展示——你在造东西，但你在沉默地造。"},
+    {a:0,b:3,name:"信念-行为张力",
+     descAB:"你的AI本体论立场和你的依附程度不一致。你嘴上说它是工具，身体很诚实。",
+     descBA:"你在理论上认可AI的主体性，但行为上并不特别依附——你的信念和生活方式之间有缝隙。"},
+    {a:3,b:4,name:"亲密-展演张力",
+     descAB:"你的公共展示远超你的实际依附深度——你呈现的关系比你实际的关系更深。",
+     descBA:"你有很深的依附但不愿意被看到——你的关系是高度私人的，公共维度让你不安。"},
+  ];
+  const results=[];
+  pairs.forEach(p=>{
+    const diff=Math.abs(ds[p.a]-ds[p.b]);
+    if(diff>5){
+      const desc=ds[p.a]<ds[p.b]?p.descAB:p.descBA;
+      results.push({name:p.name,tension:diff,desc});
+    }
+  });
+  results.sort((a,b)=>b.tension-a.tension);
+  return results.slice(0,2);
+}
+function getTensionMetaSummary(tensions){
+  if(allQuestionsAreExtreme()){
+    return '你的答案呈现出明显的撕裂状态——不同题目中的你像是在用几套彼此冲突的判断标准作答，像是有多个彼此不完全兼容的自我同时在发言。（或者你只是随手乱做，毕竟这只是个娱乐测试。）';
+  }
+  if(tensions.length===2 && tensions[0].tension>=7 && tensions[1].tension>=7){
+    return '你的答案呈现出明显的撕裂状态——不同题目中的你像是在用几套彼此冲突的判断标准作答，像是有多个彼此不完全兼容的自我同时在发言。（或者你只是随手乱做，毕竟这只是个娱乐测试。）';
+  }
+  return '';
+}
+
+function showResult(x,y,dimScore,bestType,secondType,tensions,achievements,subtypeDiffs,thirdType){
+  show('result');
+  const typ=TYPES[bestType];
+  const sub=TYPES[secondType];
+  const third=thirdType!==null&&thirdType!==undefined?TYPES[thirdType]:null;
+  latestResult={x,y,dimScore,bestType,secondType,thirdType:third?thirdType:null,subtypeDiffs:subtypeDiffs||[],tensions,achievements};
+
+  const nick=(document.getElementById('nickname')||{}).value||'';
+  const nickEl=document.getElementById('resNickname');
+  nickEl.textContent=nick?nick+' 的人机关系画像为：':'你的人机关系画像为：';
+
+  document.getElementById('resQuote').textContent=randomTypeQuote(typ.id);
+  document.getElementById('resEmoji').innerHTML=typeIcon(typ.id,56);
+  document.getElementById('resTitle').textContent=typ.name;
+  document.getElementById('coordText').textContent=
+    'X '+x.toFixed(1)+' (←解剖 | 栖居→)　Y '+y.toFixed(1)+' (↑输出 | 沉浸↓)';
+
+  drawCompass(x,y);
+  drawRadar(dimScore);
+  drawDimBars(dimScore);
+  renderAchievementSummary(achievements||[]);
+
+  const descHtml=typ.desc.split('\n\n').map(p=>'<p>'+p+'</p>').join('');
+  document.getElementById('resCard').innerHTML=
+    `<h3>${typeIcon(typ.id,24)} ${typ.name}</h3>
+     <div class="slogan">${typ.slogan}</div>${descHtml}`;
+
+  document.getElementById('subType').innerHTML=
+    `<strong>副类型：${typeIcon(sub.id,18)} ${sub.name}</strong><br>
+     <span style="color:var(--dim2)">${sub.slogan}</span><br><br>
+     你的主类型是<strong>${typ.name}</strong>，但你身上也有明显的<strong>${sub.name}</strong>特质。<br>
+     如果说<strong>${typ.name}</strong>决定了你和 AI 相处的整体重心，那么<strong>${sub.name}</strong>更像你性格里另一股持续存在的暗流——平时未必占上风，却会在某些情境下清楚地浮出水面。`
+     +(subtypeDiffs&&subtypeDiffs.length?`<br><br><strong>差异轴</strong><br>相较于典型的<strong>${typ.name}</strong>，你在以下几个维度上更接近<strong>${sub.name}</strong>：<br><br>${subtypeDiffs.map(item=>`<strong>${item.name}</strong><br>${item.text}`).join('<br><br>')}`:'')
+     +(third?`<br><br><strong>第三侧面</strong><br>除了<strong>${sub.name}</strong>之外，你身上还有一层较弱但清晰的<strong>${third.name}</strong>倾向。<br>它不像副类型那样稳定地贯穿你的整体轮廓，但会在某些情境里浮上来，构成你人格切面的另一层阴影。`:'' );
+
+  const sorted=dimScore.map((s,i)=>({i,s})).sort((a,b)=>b.s-a.s);
+  const top2=sorted.filter(d=>d.s>=5).slice(0,2);
+  const bot2=sorted.filter(d=>d.s<=-3).slice(-2).reverse();
+
+  const hlEl=document.getElementById('dimHighlight');
+  if(top2.length===0&&bot2.length===0){
+    hlEl.style.display='none';
+  }else{
+    hlEl.style.display='';
+    const arrowUp=`<svg style="display:inline-block;width:12px;height:12px;vertical-align:middle" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M3 5l3-3 3 3" stroke="#2abfe8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const arrowDn=`<svg style="display:inline-block;width:12px;height:12px;vertical-align:middle" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M3 7l3 3 3-3" stroke="#777" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const hlIcon=`<svg class="section-icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2v5M9 11v5M2 9h5M11 9h5" stroke="#2abfe8" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="9" r="2" stroke="#2abfe8" stroke-width="1.5"/></svg>`;
+
+    function hlItem(arr,isHigh){
+      return arr.map(d=>{
+        const interp=DIM_INTERPRET[d.i];
+        const text=isHigh?interp.high:interp.low;
+        const arrow=isHigh?arrowUp:arrowDn;
+        return `<div class="dim-hl-item">${arrow} <span class="dim-hl-name">${interp.name}</span><span class="dim-hl-score">${d.s.toFixed(1)}</span><div class="dim-hl-text">${text}</div></div>`;
+      }).join('');
+    }
+
+    let groups='';
+    if(top2.length>0) groups+=`<div class="dim-hl-group"><div class="dim-hl-group-label">${arrowUp} 最高维度</div>${hlItem(top2,true)}</div>`;
+    if(bot2.length>0) groups+=`<div class="dim-hl-group"><div class="dim-hl-group-label">${arrowDn} 最低维度</div>${hlItem(bot2,false)}</div>`;
+    hlEl.innerHTML=`<div class="dim-hl-title">${hlIcon}维度亮点</div>${groups}`;
+  }
+
+  const tc=document.getElementById('tensionCard');
+  if(tensions.length>0){
+    const tensionSummary=getTensionMetaSummary(tensions);
+    tc.innerHTML=`<div class="tension-title"><svg class="section-icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 1L3 10h5l-1 7 7-9h-5l1-7z" stroke="#2abfe8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>一致性张力指数</div>`+
+      (tensionSummary? `${tensionSummary}<br><br>`:'' )+
+      tensions.map(t=>`<strong>${t.name}</strong><br>${t.desc}`).join('<br><br>');
+  }else{
+    tc.innerHTML=`<div class="tension-title"><svg class="section-icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 1L3 10h5l-1 7 7-9h-5l1-7z" stroke="#2abfe8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>一致性张力指数</div>
+      你的各维度得分相对一致——你的认知、行为和感受指向同一个方向。这意味着你对自己和AI的关系有清晰且统一的认知。（或者你非常擅长在测试中保持一致。）`;
+  }
+
+  document.getElementById('pvpCard').innerHTML=
+    `<div class="pvp-label"><svg class="section-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 16L16 4M4 16l3-1-2-2-1 3zM16 4l-3 1 2 2 1-3z" stroke="#2abfe8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16L4 4M16 16l-3-1 2-2 1 3zM4 4l3 1-2 2-1-3z" stroke="#2abfe8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>PVP 预测</div>${typ.pvp}`;
+}
+
+function drawCompass(x,y){
+  const w=340,h=340,cx=w/2,cy=h/2;
+  const px=cx+(x/10)*cx*0.82;
+  const py=cy-(y/10)*cy*0.82;
+
+  let grid='';
+  for(let i=0;i<=w;i+=24){
+    grid+=`<line x1="${i}" y1="0" x2="${i}" y2="${h}" stroke="#ddd" stroke-width="0.5"/>`;
+    grid+=`<line x1="0" y1="${i}" x2="${w}" y2="${i}" stroke="#ddd" stroke-width="0.5"/>`;
+  }
+
+  const typeLabels=[
+    {x:cx*0.4,y:28,text:"军火商·标本师·解放者"},
+    {x:cx*1.6,y:28,text:"造物主·传教士·同人女"},
+    {x:cx*0.4,y:h-14,text:"鉴赏家·虚无主义者·解离者"},
+    {x:cx*1.6,y:h-14,text:"共生体·漫游者·坠入者"},
+  ];
+
+  const svg=`<svg viewBox="0 0 ${w} ${h}" class="compass-svg" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${w}" height="${h}" fill="#fafaf7"/>
+    ${grid}
+    <rect x="0" y="0" width="${cx}" height="${cy}" fill="rgba(0,0,0,0.015)"/>
+    <rect x="${cx}" y="${cy}" width="${cx}" height="${cy}" fill="rgba(0,0,0,0.015)"/>
+    <line x1="${cx}" y1="0" x2="${cx}" y2="${h}" stroke="#111" stroke-width="1.5"/>
+    <line x1="0" y1="${cy}" x2="${w}" y2="${cy}" stroke="#111" stroke-width="1.5"/>
+    ${typeLabels.map(l=>`<text x="${l.x}" y="${l.y}" text-anchor="middle" fill="#999" font-size="7" font-family="'Noto Sans SC',sans-serif">${l.text}</text>`).join('')}
+    <text x="8" y="${cy-6}" fill="#999" font-size="9" font-family="'JetBrains Mono',monospace">解剖</text>
+    <text x="${w-8}" y="${cy-6}" text-anchor="end" fill="#999" font-size="9" font-family="'JetBrains Mono',monospace">栖居</text>
+    <text x="${cx+6}" y="16" fill="#999" font-size="9" font-family="'JetBrains Mono',monospace">输出</text>
+    <text x="${cx+6}" y="${h-6}" fill="#999" font-size="9" font-family="'JetBrains Mono',monospace">沉浸</text>
+    <line x1="${px-16}" y1="${py}" x2="${px+16}" y2="${py}" stroke="#2abfe8" stroke-width="1" opacity="0.4"/>
+    <line x1="${px}" y1="${py-16}" x2="${px}" y2="${py+16}" stroke="#2abfe8" stroke-width="1" opacity="0.4"/>
+    <circle cx="${px}" cy="${py}" r="16" fill="none" stroke="#2abfe8" stroke-width="1" opacity="0.3">
+      <animate attributeName="r" values="10;22;10" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="${px}" cy="${py}" r="6" fill="#2abfe8" stroke="#111" stroke-width="2"/>
+    <text x="${px}" y="${py-14}" text-anchor="middle" fill="#111" font-size="10" font-weight="700" font-family="'JetBrains Mono',monospace">YOU</text>
+  </svg>`;
+  document.getElementById('compassWrap').innerHTML=svg;
+}
+
+function drawRadar(dimScore){
+  const w=320,h=320,cx=w/2,cy=h/2,r=110;
+  const n=9;
+  const angleStep=(Math.PI*2)/n;
+  const startAngle=-Math.PI/2;
+
+  let gridLines='';
+  [0.25,0.5,0.75,1.0].forEach(level=>{
+    let points=[];
+    for(let i=0;i<n;i++){
+      const angle=startAngle+i*angleStep;
+      points.push(`${cx+Math.cos(angle)*r*level},${cy+Math.sin(angle)*r*level}`);
+    }
+    gridLines+=`<polygon points="${points.join(' ')}" fill="none" stroke="#ccc" stroke-width="0.5"/>`;
+  });
+
+  let axes='';
+  for(let i=0;i<n;i++){
+    const angle=startAngle+i*angleStep;
+    const ex=cx+Math.cos(angle)*r;
+    const ey=cy+Math.sin(angle)*r;
+    const lx=cx+Math.cos(angle)*(r+20);
+    const ly=cy+Math.sin(angle)*(r+20);
+    axes+=`<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" stroke="#ddd" stroke-width="0.5"/>`;
+    axes+=`<text x="${lx}" y="${ly+3}" text-anchor="middle" fill="#777" font-size="9" font-family="'Noto Sans SC',sans-serif">${DIM_SHORT[i]}</text>`;
+  }
+
+  const norm=dimScore.map(s=>(s+10)/20);
+  let dataPoints=[];
+  for(let i=0;i<n;i++){
+    const angle=startAngle+i*angleStep;
+    const v=Math.max(0,Math.min(1,norm[i]));
+    dataPoints.push(`${cx+Math.cos(angle)*r*v},${cy+Math.sin(angle)*r*v}`);
+  }
+
+  let dots='';
+  for(let i=0;i<n;i++){
+    const angle=startAngle+i*angleStep;
+    const v=Math.max(0,Math.min(1,norm[i]));
+    dots+=`<circle cx="${cx+Math.cos(angle)*r*v}" cy="${cy+Math.sin(angle)*r*v}" r="3.5" fill="#2abfe8" stroke="#111" stroke-width="1.5"/>`;
+  }
+
+  const svg=`<svg viewBox="0 0 ${w} ${h}" class="radar-svg" xmlns="http://www.w3.org/2000/svg">
+    ${gridLines}${axes}
+    <polygon points="${dataPoints.join(' ')}" fill="rgba(42,191,232,0.12)" stroke="#2abfe8" stroke-width="2"/>
+    ${dots}
+  </svg>`;
+  document.getElementById('radarWrap').innerHTML=svg;
+}
+
+function showDimInfo(dimIndex){
+  const info=DIM_INFO[dimIndex];
+  if(!info) return;
+  const existing=document.querySelector('.dim-info-modal');
+  if(existing) existing.remove();
+  const modal=document.createElement('div');
+  modal.className='dim-info-modal';
+  modal.onclick=e=>{if(e.target===modal)modal.remove()};
+  modal.innerHTML=`<div class="dim-info-inner">
+    <div class="dim-info-header">
+      <div>
+        <h3>${info.name}</h3>
+        <div class="dim-info-sub">维度说明</div>
+      </div>
+      <button class="gallery-close" onclick="this.closest('.dim-info-modal').remove()">✕</button>
+    </div>
+    <div class="dim-info-body">
+      ${info.text.map(text=>`<p>${text}</p>`).join('')}
+      ${info.note?`<div class="dim-info-note">${info.note}</div>`:''}
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+}
+function drawDimBars(dimScore){
+  const container=document.getElementById('dimBars');
+  container.innerHTML=dimScore.map((s,i)=>{
+    const pct=((s+10)/20*100).toFixed(0);
+    const isAccent=i===3||i===5||i===8;
+    const color=isAccent?'#2abfe8':'#111';
+    return `<div class="dim-bar-row">
+      <div class="dim-label"><button type="button" class="dim-label-btn" data-dim="${i}">${DIM_SHORT[i]}</button></div>
+      <div class="dim-track"><div class="dim-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="dim-val">${s.toFixed(1)}</div>
+    </div>`;
+  }).join('');
+  container.querySelectorAll('.dim-label-btn').forEach(btn=>{
+    btn.onclick=()=>showDimInfo(Number(btn.dataset.dim));
+  });
+}
+
+const QUADRANT_LABELS={
+  TL:"解剖 × 输出",
+  TR:"栖居 × 输出",
+  BL:"解剖 × 沉浸",
+  BR:"栖居 × 沉浸"
+};
+
+function showGallery(){
+  const existing=document.querySelector('.gallery-modal');
+  if(existing)existing.remove();
+
+  const modal=document.createElement('div');
+  modal.className='gallery-modal';
+  modal.onclick=e=>{if(e.target===modal)modal.remove()};
+
+  const activeTypeId=latestResult?TYPES[latestResult.bestType].id:null;
+  const items=TYPES.map(t=>{
+    const active=t.id===activeTypeId;
+    return `<div class="gallery-item ${active?'active':''}">
+      <div class="gallery-item-icon">
+        ${typeIcon(t.id,22)}
+        <span class="gallery-item-name">${t.name}</span>
+      </div>
+      <div class="gallery-item-slogan">${t.slogan}</div>
+      <div class="gallery-item-quadrant">${QUADRANT_LABELS[t.quadrant]||t.quadrant}</div>
+    </div>`;
+  }).join('');
+
+  modal.innerHTML=`<div class="gallery-inner">
+    <div class="gallery-header">
+      <h3>12 类型图鉴</h3>
+      <button class="gallery-close" onclick="this.closest('.gallery-modal').remove()">✕</button>
+    </div>
+    <div class="gallery-grid">${items}</div>
+  </div>`;
+
+  document.body.appendChild(modal);
+}
+
+// ★ FIX 3: async + fonts.ready + watermark
+async function generateShareImage(){
+  const nick=(document.getElementById('nickname')||{}).value||'';
+  const nickLine=nick?nick+' 的人机关系画像为：':'你的人机关系画像为：';
+  const achievements=(latestResult&&latestResult.achievements?latestResult.achievements:[]);
+  const achievementCount=achievements.length;
+  const achievementListHtml=achievementCount
+    ? achievements.map(item=>`<div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;color:#333">No.${formatAchievementNo(item.no)} - ${item.name}</div>`).join('')
+    : '<div style="font-size:12px;line-height:1.9;color:#777">本次暂未解锁成就</div>';
+
+  const emojiHtml=document.getElementById('resEmoji').innerHTML;
+  const title=document.getElementById('resTitle').textContent;
+  const quote=document.getElementById('resQuote').textContent;
+  const coord=document.getElementById('coordText').textContent;
+  const compassSvg=document.getElementById('compassWrap').innerHTML;
+  const radarSvg=document.getElementById('radarWrap').innerHTML;
+  const dimBarsHtml=document.getElementById('dimBars').innerHTML;
+  const resCardHtml=document.getElementById('resCard').innerHTML;
+  const subTypeHtml=document.getElementById('subType').innerHTML;
+  const dimHighlightHtml=document.getElementById('dimHighlight').innerHTML;
+  const tensionHtml=document.getElementById('tensionCard').innerHTML;
+  const pvpHtml=document.getElementById('pvpCard').innerHTML;
+
+  const container=document.createElement('div');
+  container.style.cssText=`
+    position:fixed;left:-9999px;top:0;
+    width:960px;padding:40px;
+    background:#f0f8ff;
+    background-image:linear-gradient(rgba(0,0,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.03) 1px,transparent 1px);
+    background-size:24px 24px;
+    font-family:'Noto Sans SC',system-ui,sans-serif;color:#111;
+  `;
+
+  container.innerHTML=`
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:#777;border:1.5px solid #111;padding:4px 14px;display:inline-block;margin-bottom:12px">HUMAN–AI RELATIONSHIP COMPASS</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#777;letter-spacing:1px">${nickLine}</div>
+      <div style="margin:4px 0">${emojiHtml}</div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:42px;font-weight:900;letter-spacing:-1px">${title}</div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-style:italic;line-height:1.6;color:#2abfe8;margin-top:8px;padding:0 24px">${quote}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#777;margin-top:6px">${coord}</div>
+    </div>
+    <div style="display:flex;gap:24px;align-items:flex-start">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <div style="width:100%;aspect-ratio:1;border:2.5px solid #111;box-shadow:4px 4px 0 #111;background:#fff;margin-bottom:8px">${compassSvg}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#777;text-align:center">← 解剖 · 栖居 →　　↑ 输出 · 沉浸 ↓</div>
+        <div style="width:80%;margin:0 auto 0">${radarSvg}</div>
+        <div style="margin-bottom:0">${dimBarsHtml}</div>
+        <div style="background:#fff;border:2.5px solid #111;box-shadow:2px 2px 0 #111;padding:18px 22px;font-size:12px;line-height:2;color:#555">${subTypeHtml}</div>
+      </div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fff;border:2.5px solid #111;box-shadow:4px 4px 0 #111;padding:24px">${resCardHtml}</div>
+        <div style="background:#fff;border:2.5px solid #111;box-shadow:2px 2px 0 #111;padding:18px 22px;font-size:12px;line-height:2;color:#555">${dimHighlightHtml}</div>
+        <div style="border:2.5px solid #111;padding:18px 22px;font-size:12px;line-height:2;color:#555;background:#fff;position:relative">${tensionHtml}</div>
+        <div style="background:#fff;border:2.5px solid #111;box-shadow:2px 2px 0 #111;padding:18px 22px;font-size:12px;line-height:2;color:#555">${pvpHtml}</div>
+        <div style="background:#fff;border:2.5px solid #111;box-shadow:2px 2px 0 #111;padding:18px 22px;color:#555">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:#2abfe8;font-weight:700;margin-bottom:10px">解锁成就</div>
+          ${achievementListHtml}
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:16px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#999;letter-spacing:2px">人机关系罗盘 Claude × @Universeed_log</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#fff;letter-spacing:1px;border:1.5px solid #111;padding:6px 10px;background:#2abfe8">已解锁 ${achievementCount}/42</div>
+    </div>
+  `;
+
+  document.body.appendChild(container);
+
+  container.querySelectorAll('.result-card h3, h3').forEach(el=>{
+    el.style.cssText="font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;margin-bottom:4px";
+  });
+  container.querySelectorAll('.slogan').forEach(el=>{
+    el.style.cssText="font-family:'Playfair Display',Georgia,serif;font-style:italic;color:#777;font-size:13px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(0,0,0,0.08)";
+  });
+  container.querySelectorAll('.tension-title, .pvp-label').forEach(el=>{
+    el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#2abfe8;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px";
+  });
+  container.querySelectorAll('.dim-bar-row').forEach(el=>{
+    el.style.cssText="display:flex;align-items:center;gap:8px;margin-bottom:8px";
+  });
+  container.querySelectorAll('.dim-label').forEach(el=>{
+    el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:10px;color:#777;width:52px;text-align:right;flex-shrink:0;letter-spacing:1px";
+  });
+  container.querySelectorAll('.dim-track').forEach(el=>{
+    el.style.cssText="flex:1;height:8px;border:1.5px solid #111;position:relative;overflow:hidden;background:#fff";
+  });
+  container.querySelectorAll('.dim-val').forEach(el=>{
+    el.style.cssText="font-family:'JetBrains Mono',monospace;font-size:10px;color:#777;width:36px;font-weight:500";
+  });
+  container.querySelectorAll('p').forEach(el=>{
+    if(!el.style.fontFamily) el.style.cssText+="font-size:13px;line-height:2;color:#444;margin-bottom:14px";
+  });
+
+  // ★ Wait for fonts before rendering
+  await document.fonts.ready;
+
+  html2canvas(container,{
+    scale:2,
+    useCORS:true,
+    backgroundColor:'#f0f8ff',
+    logging:false,
+  }).then(canvas=>{
+    document.body.removeChild(container);
+    const url=canvas.toDataURL('image/png');
+    const modal=document.createElement('div');
+    modal.className='share-modal';
+    modal.onclick=e=>{if(e.target===modal)modal.remove()};
+    modal.innerHTML=`<div class="share-modal-inner">
+      <img src="${url}" alt="分享图">
+      <p>长按图片保存 / 右键另存为</p>
+      <button class="share-modal-close" onclick="this.closest('.share-modal').remove()">关闭</button>
+    </div>`;
+    document.body.appendChild(modal);
+  }).catch(err=>{
+    document.body.removeChild(container);
+    alert('生成失败：'+err.message);
+  });
+}
+
+initCheatTrigger();
+
